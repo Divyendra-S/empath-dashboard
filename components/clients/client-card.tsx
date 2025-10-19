@@ -33,12 +33,15 @@ export function ClientCard({ client }: ClientCardProps) {
   };
 
   return (
-    <Card className="hover:shadow-lg transition-shadow">
+    <Card
+      className="transition-shadow hover:shadow-lg"
+      style={{ borderColor: "rgba(120, 57, 238, 0.14)" }}
+    >
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <Link href={`/dashboard/clients/${client.id}`}>
-              <h3 className="text-lg font-semibold hover:text-blue-600 transition-colors">
+              <h3 className="text-lg font-semibold transition-colors hover:text-[var(--theme-primary-hex)]">
                 {client.full_name}
               </h3>
             </Link>

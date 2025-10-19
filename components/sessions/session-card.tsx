@@ -11,10 +11,10 @@ interface SessionCardProps {
 }
 
 const statusColors = {
-  scheduled: "bg-blue-100 text-blue-700 border-blue-200",
-  in_progress: "bg-green-100 text-green-700 border-green-200",
-  completed: "bg-gray-100 text-gray-700 border-gray-200",
-  cancelled: "bg-red-100 text-red-700 border-red-200",
+  scheduled: "bg-[var(--theme-highlight)] text-[var(--theme-primary-hex)] border-[rgba(120,57,238,0.24)]",
+  in_progress: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  completed: "bg-slate-100 text-slate-700 border-slate-200",
+  cancelled: "bg-rose-100 text-rose-700 border-rose-200",
 };
 
 const statusLabels = {
@@ -29,11 +29,14 @@ export function SessionCard({ session }: SessionCardProps) {
 
   return (
     <Link href={`/dashboard/sessions/${session.id}`}>
-      <div className="bg-white rounded-lg p-5 shadow hover:shadow-md transition-shadow cursor-pointer h-full">
+      <div
+        className="h-full cursor-pointer rounded-2xl border bg-white/90 p-5 shadow-sm transition-shadow hover:shadow-md"
+        style={{ borderColor: "rgba(120, 57, 238, 0.14)" }}
+      >
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
-              <User className="h-5 w-5 text-purple-600" />
+            <div className="h-10 w-10 flex-shrink-0 rounded-full bg-[var(--theme-highlight)] text-[var(--theme-primary-hex)] flex items-center justify-center">
+              <User className="h-5 w-5" />
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-base font-semibold text-gray-900 truncate">

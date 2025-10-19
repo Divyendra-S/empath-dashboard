@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useArchiveClient } from "@/lib/hooks/use-clients";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import { themeConfig } from "@/lib/theme";
 
 interface ClientProfileHeaderProps {
   client: {
@@ -41,11 +42,17 @@ export function ClientProfileHeader({ client }: ClientProfileHeaderProps) {
     .slice(0, 2);
 
   return (
-    <div className="bg-white rounded-lg border p-6">
+    <div
+      className="rounded-3xl border bg-white/90 p-6 shadow-sm"
+      style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+    >
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-start gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarFallback className="bg-blue-600 text-white text-xl">
+            <AvatarFallback
+              className="text-white text-xl"
+              style={{ background: themeConfig.gradients.icon }}
+            >
               {initials}
             </AvatarFallback>
           </Avatar>
@@ -64,7 +71,7 @@ export function ClientProfileHeader({ client }: ClientProfileHeaderProps) {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button asChild>
+          <Button asChild className="rounded-xl">
             <Link href={`/dashboard/clients/${client.id}/edit`}>
               <Edit className="mr-2 h-4 w-4" />
               Edit

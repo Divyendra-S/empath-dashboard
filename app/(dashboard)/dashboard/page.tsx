@@ -5,7 +5,6 @@ import {
   Plus,
   Users,
   Calendar as CalendarIcon,
-  TrendingUp,
   ArrowRight,
   CheckCircle2,
   Clock,
@@ -18,6 +17,7 @@ import {
   useUpcomingSessions,
 } from "@/lib/hooks/use-dashboard";
 import { SessionCard } from "@/components/sessions/session-card";
+import { themeConfig } from "@/lib/theme";
 
 export default function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = useDashboardStats();
@@ -46,7 +46,6 @@ export default function DashboardPage() {
       value: stats?.totalClients || 0,
       helper: "Active clients",
       icon: Users,
-      tone: "from-blue-500 to-indigo-500",
       helperTone: "text-emerald-600",
     },
     {
@@ -54,7 +53,6 @@ export default function DashboardPage() {
       value: 0,
       helper: "Sessions today",
       icon: CalendarIcon,
-      tone: "from-purple-500 to-purple-600",
       helperTone: "text-slate-500",
     },
     {
@@ -62,7 +60,6 @@ export default function DashboardPage() {
       value: stats?.upcomingSessions || 0,
       helper: "Upcoming",
       icon: Clock,
-      tone: "from-pink-500 to-rose-500",
       helperTone: "text-slate-500",
     },
     {
@@ -70,16 +67,27 @@ export default function DashboardPage() {
       value: stats?.thisWeekSessions || 0,
       helper: "This week",
       icon: CheckCircle2,
-      tone: "from-emerald-500 to-teal-500",
       helperTone: "text-slate-500",
     },
   ];
 
   return (
     <div className="space-y-10">
-      <section className="relative overflow-hidden rounded-3xl border border-purple-100/60 bg-gradient-to-br from-purple-50 via-violet-50 to-fuchsia-50 p-6 shadow-sm">
-        <div className="absolute -top-16 right-0 h-36 w-36 rounded-full bg-purple-200/40 blur-3xl" />
-        <div className="absolute -bottom-20 -left-10 h-44 w-44 rounded-full bg-fuchsia-200/30 blur-3xl" />
+      <section
+        className="relative overflow-hidden rounded-3xl border p-6 shadow-sm"
+        style={{
+          borderColor: "rgba(120, 57, 238, 0.18)",
+          background: themeConfig.gradients.panel,
+        }}
+      >
+        <div
+          className="absolute -top-16 right-0 h-36 w-36 rounded-full blur-3xl"
+          style={{ background: themeConfig.colors.highlightStrong }}
+        />
+        <div
+          className="absolute -bottom-20 -left-10 h-44 w-44 rounded-full blur-3xl"
+          style={{ background: themeConfig.colors.highlight }}
+        />
         <div className="relative">
           <h1 className="text-2xl font-semibold text-slate-900">
             Good {timeOfDay} 👋
@@ -89,13 +97,23 @@ export default function DashboardPage() {
             {metricCards.map((card, index) => (
               <div
                 key={card.label}
-                className="rounded-2xl border border-white/60 bg-white/70 p-4 backdrop-blur-sm"
+                className="rounded-2xl border p-4 backdrop-blur-sm"
+                style={{
+                  borderColor: "rgba(120, 57, 238, 0.16)",
+                  backgroundColor: "rgba(255,255,255,0.82)",
+                }}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                     {card.label}
                   </span>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-600/40 text-purple-600">
+                  <div
+                    className="flex h-8 w-8 items-center justify-center rounded-lg"
+                    style={{
+                      background: themeConfig.gradients.badge,
+                      color: themeConfig.colors.primary,
+                    }}
+                  >
                     {index === 0 ? (
                       <Users className="h-4 w-4" />
                     ) : index === 1 ? (
@@ -139,7 +157,8 @@ export default function DashboardPage() {
             asChild
             variant="ghost"
             size="sm"
-            className="hover:bg-slate-100 text-slate-700"
+            className="text-slate-700"
+            style={{ borderRadius: "0.75rem" }}
           >
             <Link href="/dashboard/sessions">
               View all <ArrowRight className="ml-2 h-4 w-4" />
@@ -187,7 +206,8 @@ export default function DashboardPage() {
             asChild
             variant="ghost"
             size="sm"
-            className="hover:bg-slate-100 text-slate-700"
+            className="text-slate-700"
+            style={{ borderRadius: "0.75rem" }}
           >
             <Link href="/dashboard/calendar">
               View calendar <ArrowRight className="ml-2 h-4 w-4" />
@@ -208,8 +228,8 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-purple-200 bg-purple-50/60 p-10 text-center">
-              <CalendarIcon className="h-10 w-10 text-purple-500" />
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-[rgba(120,57,238,0.24)] bg-[var(--theme-highlight)] p-10 text-center">
+              <CalendarIcon className="h-10 w-10 text-[var(--theme-primary-hex)]" />
               <h3 className="mt-4 text-base font-semibold text-slate-900">
                 No upcoming sessions
               </h3>
@@ -220,7 +240,12 @@ export default function DashboardPage() {
                 asChild
                 variant="ghost"
                 size="sm"
-                className="mt-5 bg-white/70 font-medium text-purple-600 hover:bg-purple-100"
+                className="mt-5 font-medium text-[var(--theme-primary-hex)]"
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.7)",
+                  borderRadius: "0.75rem",
+                  color: "var(--theme-primary-hex)",
+                }}
               >
                 <Link href="/dashboard/calendar">
                   <Plus className="mr-2 h-4 w-4" />

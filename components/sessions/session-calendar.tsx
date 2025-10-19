@@ -11,6 +11,7 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { useUpdateSession } from "@/lib/hooks/use-sessions";
 import { RescheduleDialog } from "./reschedule-dialog";
 import type { SessionWithClient, SessionStatus } from "@/lib/types";
+import { themeConfig } from "@/lib/theme";
 
 const DragAndDropCalendar = withDragAndDrop<CalendarEvent, object>(Calendar);
 
@@ -42,10 +43,10 @@ interface SessionCalendarProps {
 }
 
 const statusColors = {
-  scheduled: "#3b82f6", // blue
-  in_progress: "#10b981", // green
-  completed: "#6b7280", // gray
-  cancelled: "#ef4444", // red
+  scheduled: themeConfig.colors.primary,
+  in_progress: "#10b981",
+  completed: "#6b7280",
+  cancelled: "#ef4444",
 };
 
 export function SessionCalendar({
