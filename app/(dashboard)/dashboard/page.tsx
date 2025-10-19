@@ -10,13 +10,6 @@ import {
   CheckCircle2,
   Clock,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -46,245 +39,202 @@ export default function DashboardPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Welcome Header */}
-      <div
-        className="bg-gradient-to-br from-purple-50 via-violet-50 to-fuchsia-50 rounded-2xl p-5"
-        style={{ borderColor: "rgb(240 237 255)", borderWidth: "1px" }}
-      >
-        <h1 className="text-xl font-semibold text-gray-900">
+      <div className="bg-gradient-to-br from-purple-50 via-violet-50 to-fuchsia-50 rounded-xl p-6 border border-purple-100/50">
+        <h1 className="text-2xl font-semibold text-gray-900">
           Good {timeOfDay} 👋
         </h1>
-        <p className="text-sm text-gray-600 mt-0.5">{dateString}</p>
+        <p className="text-sm text-gray-600 mt-1">{dateString}</p>
       </div>
 
       {/* Key Metrics Cards */}
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-        <Card
-          className="hover:shadow-md transition-all duration-200 p-0 gap-0"
-          style={{ borderColor: "rgb(240 237 255)" }}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-2">
-            <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {/* Total Clients */}
+        <div className="bg-white rounded-xl p-5 border border-gray-200/60 hover:shadow-lg hover:border-gray-300/60 transition-all duration-200">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               Total Clients
-            </CardTitle>
-            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
-              <Users className="h-3.5 w-3.5 text-white" />
+            </span>
+            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
+              <Users className="h-4 w-4 text-white" />
             </div>
-          </CardHeader>
-          <CardContent className="p-3 pt-0">
-            {statsLoading ? (
-              <Skeleton className="h-7 w-14" />
-            ) : (
-              <>
-                <div className="text-xl font-bold text-gray-900">
-                  {stats?.totalClients || 0}
-                </div>
-                <p className="text-xs text-green-600 mt-0.5 flex items-center font-medium">
-                  <TrendingUp className="h-3 w-3 mr-1" />
-                  Active clients
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
+          </div>
+          {statsLoading ? (
+            <Skeleton className="h-8 w-16" />
+          ) : (
+            <>
+              <div className="text-3xl font-bold text-gray-900 mb-1">
+                {stats?.totalClients || 0}
+              </div>
+              <p className="text-xs text-green-600 flex items-center font-medium">
+                <TrendingUp className="h-3 w-3 mr-1" />
+                Active clients
+              </p>
+            </>
+          )}
+        </div>
 
-        <Card
-          className="hover:shadow-md transition-all duration-200 p-0 gap-0"
-          style={{ borderColor: "rgb(240 237 255)" }}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-2">
-            <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+        {/* Today */}
+        <div className="bg-white rounded-xl p-5 border border-gray-200/60 hover:shadow-lg hover:border-gray-300/60 transition-all duration-200">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               Today
-            </CardTitle>
-            <div
-              className="h-7 w-7 rounded-lg flex items-center justify-center shadow-sm"
-              style={{
-                background:
-                  "linear-gradient(to bottom right, #7839EE, #9d5eff)",
-              }}
-            >
-              <CalendarIcon className="h-3.5 w-3.5 text-white" />
+            </span>
+            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-md">
+              <CalendarIcon className="h-4 w-4 text-white" />
             </div>
-          </CardHeader>
-          <CardContent className="p-3 pt-0">
-            {statsLoading ? (
-              <Skeleton className="h-7 w-14" />
-            ) : (
-              <>
-                <div className="text-xl font-bold text-gray-900">0</div>
-                <p className="text-xs text-gray-500 mt-0.5 font-medium">
-                  Sessions today
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
+          </div>
+          {statsLoading ? (
+            <Skeleton className="h-8 w-16" />
+          ) : (
+            <>
+              <div className="text-3xl font-bold text-gray-900 mb-1">0</div>
+              <p className="text-xs text-gray-500 font-medium">
+                Sessions today
+              </p>
+            </>
+          )}
+        </div>
 
-        <Card
-          className="hover:shadow-md transition-all duration-200 p-0 gap-0"
-          style={{ borderColor: "rgb(240 237 255)" }}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-2">
-            <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+        {/* This Week */}
+        <div className="bg-white rounded-xl p-5 border border-gray-200/60 hover:shadow-lg hover:border-gray-300/60 transition-all duration-200">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               This Week
-            </CardTitle>
-            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-fuchsia-500 to-pink-600 flex items-center justify-center shadow-sm">
-              <Clock className="h-3.5 w-3.5 text-white" />
+            </span>
+            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-md">
+              <Clock className="h-4 w-4 text-white" />
             </div>
-          </CardHeader>
-          <CardContent className="p-3 pt-0">
-            {statsLoading ? (
-              <Skeleton className="h-7 w-14" />
-            ) : (
-              <>
-                <div className="text-xl font-bold text-gray-900">
-                  {stats?.upcomingSessions || 0}
-                </div>
-                <p className="text-xs text-gray-500 mt-0.5 font-medium">
-                  Upcoming
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
+          </div>
+          {statsLoading ? (
+            <Skeleton className="h-8 w-16" />
+          ) : (
+            <>
+              <div className="text-3xl font-bold text-gray-900 mb-1">
+                {stats?.upcomingSessions || 0}
+              </div>
+              <p className="text-xs text-gray-500 font-medium">Upcoming</p>
+            </>
+          )}
+        </div>
 
-        <Card
-          className="hover:shadow-md transition-all duration-200 p-0 gap-0"
-          style={{ borderColor: "rgb(240 237 255)" }}
-        >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-2">
-            <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+        {/* Completed */}
+        <div className="bg-white rounded-xl p-5 border border-gray-200/60 hover:shadow-lg hover:border-gray-300/60 transition-all duration-200">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
               Completed
-            </CardTitle>
-            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-sm">
-              <CheckCircle2 className="h-3.5 w-3.5 text-white" />
+            </span>
+            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-md">
+              <CheckCircle2 className="h-4 w-4 text-white" />
             </div>
-          </CardHeader>
-          <CardContent className="p-3 pt-0">
-            {statsLoading ? (
-              <Skeleton className="h-7 w-14" />
-            ) : (
-              <>
-                <div className="text-xl font-bold text-gray-900">
-                  {stats?.thisWeekSessions || 0}
-                </div>
-                <p className="text-xs text-gray-500 mt-0.5 font-medium">
-                  This week
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
+          </div>
+          {statsLoading ? (
+            <Skeleton className="h-8 w-16" />
+          ) : (
+            <>
+              <div className="text-3xl font-bold text-gray-900 mb-1">
+                {stats?.thisWeekSessions || 0}
+              </div>
+              <p className="text-xs text-gray-500 font-medium">This week</p>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Recent Sessions */}
-      <Card className="p-0 gap-0" style={{ borderColor: "rgb(240 237 255)" }}>
-        <CardHeader
-          className="p-4 pb-3"
-          style={{ borderBottom: "1px solid rgb(246 244 255)" }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Recent Sessions</CardTitle>
-              <CardDescription>Your latest sessions</CardDescription>
-            </div>
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="hover:bg-purple-50"
-              style={{ color: "#7839EE" }}
-            >
-              <Link href="/dashboard/sessions">
-                View all <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+      <div className="space-y-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Recent Sessions</h2>
+            <p className="text-sm text-gray-500 mt-1">Your latest sessions</p>
           </div>
-        </CardHeader>
-        <CardContent className="p-4">
-          {sessionsLoading ? (
-            <div className="space-y-3">
-              {[...Array(3)].map((_, i) => (
-                <Skeleton key={i} className="h-28" />
-              ))}
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="hover:bg-gray-100 text-gray-700 font-medium"
+          >
+            <Link href="/dashboard/sessions">
+              View all <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+
+        {sessionsLoading ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-32" />
+            ))}
+          </div>
+        ) : recentSessions && recentSessions.length > 0 ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {recentSessions.map((session) => (
+              <SessionCard key={session.id} session={session} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-gray-200/60">
+            <div className="h-16 w-16 rounded-full bg-gray-50 flex items-center justify-center mb-4">
+              <Clock className="h-8 w-8 text-gray-400" />
             </div>
-          ) : recentSessions && recentSessions.length > 0 ? (
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-              {recentSessions.map((session) => (
-                <SessionCard key={session.id} session={session} />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <Clock className="h-10 w-10 text-gray-300 mb-3" />
-              <h3 className="text-base font-medium text-gray-900 mb-1">
-                No recent sessions
-              </h3>
-              <p className="text-sm text-gray-500">
-                You haven&apos;t completed any sessions yet
-              </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+            <h3 className="text-base font-semibold text-gray-900 mb-1">
+              No recent sessions
+            </h3>
+            <p className="text-sm text-gray-500">
+              You haven&apos;t completed any sessions yet
+            </p>
+          </div>
+        )}
+      </div>
 
       {/* Upcoming Sessions */}
-      <Card className="p-0 gap-0" style={{ borderColor: "rgb(240 237 255)" }}>
-        <CardHeader
-          className="p-4 pb-3"
-          style={{ borderBottom: "1px solid rgb(246 244 255)" }}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Upcoming Sessions</CardTitle>
-              <CardDescription>Your scheduled sessions</CardDescription>
-            </div>
-            <Button
-              asChild
-              variant="ghost"
-              size="sm"
-              className="hover:bg-purple-50"
-              style={{ color: "#7839EE" }}
-            >
-              <Link href="/dashboard/calendar">
-                View Calendar <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="p-4">
-          {/* Empty state - will be populated with real data later */}
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <div
-              className="h-14 w-14 rounded-2xl flex items-center justify-center mb-3"
-              style={{
-                background:
-                  "linear-gradient(to bottom right, rgb(246 244 255), rgb(240 237 255))",
-              }}
-            >
-              <CalendarIcon className="h-7 w-7" style={{ color: "#7839EE" }} />
-            </div>
-            <h3 className="text-base font-medium text-gray-900 mb-1">
-              No upcoming sessions
-            </h3>
-            <p className="text-sm text-gray-500 mb-4">
-              Schedule your next session to get started
+      <div className="space-y-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">
+              Upcoming Sessions
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Your scheduled sessions
             </p>
-            <Button
-              asChild
-              variant="ghost"
-              className="hover:bg-purple-50 font-medium"
-              style={{ color: "#7839EE" }}
-            >
-              <Link href="/dashboard/calendar">
-                <Plus className="mr-2 h-4 w-4" />
-                Schedule a Session
-              </Link>
-            </Button>
           </div>
-        </CardContent>
-      </Card>
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="hover:bg-gray-100 text-gray-700 font-medium"
+          >
+            <Link href="/dashboard/calendar">
+              View Calendar <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+
+        {/* Empty state - will be populated with real data later */}
+        <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-gray-200/60">
+          <div className="h-16 w-16 rounded-full bg-purple-50 flex items-center justify-center mb-4">
+            <CalendarIcon className="h-8 w-8 text-purple-500" />
+          </div>
+          <h3 className="text-base font-semibold text-gray-900 mb-1">
+            No upcoming sessions
+          </h3>
+          <p className="text-sm text-gray-500 mb-5">
+            Schedule your next session to get started
+          </p>
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="font-medium border-purple-200 text-purple-600 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300"
+          >
+            <Link href="/dashboard/calendar">
+              <Plus className="mr-2 h-4 w-4" />
+              Schedule a Session
+            </Link>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
