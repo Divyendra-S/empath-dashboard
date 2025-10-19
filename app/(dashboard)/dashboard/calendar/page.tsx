@@ -26,7 +26,7 @@ export default function CalendarPage() {
   const viewParam = searchParams.get("view");
   const newParam = searchParams.get("new");
   const scheduledAtParam = searchParams.get("scheduled_at");
-  
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<SessionStatus | undefined>(
     undefined
@@ -125,7 +125,8 @@ export default function CalendarPage() {
                 className="rounded-xl border bg-white/70 px-4 py-2 text-xs font-medium text-[var(--theme-primary-hex)] shadow-sm"
                 style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
               >
-                <Sparkles className="mr-1 inline h-4 w-4 text-[var(--theme-primary-hex)]" /> Smart scheduling keeps you on track
+                <Sparkles className="mr-1 inline h-4 w-4 text-[var(--theme-primary-hex)]" />{" "}
+                Smart scheduling keeps you on track
               </div>
             </div>
           </div>
@@ -168,7 +169,7 @@ export default function CalendarPage() {
         </div>
 
         <div
-          className="rounded-3xl border bg-white/90 p-4 shadow-sm"
+          className="rounded-3xl border bg-white/90 p-4"
           style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
         >
           {error ? (

@@ -156,7 +156,7 @@ export function SessionCalendar({
 
   return (
     <>
-      <div className="h-[700px] bg-white rounded-lg p-4 shadow-sm">
+      <div className="h-[700px] bg-white rounded-lg">
         <DragAndDropCalendar
           localizer={localizer}
           events={events}
