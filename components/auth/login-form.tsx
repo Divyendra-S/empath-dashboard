@@ -5,9 +5,9 @@ import { login } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import Link from "next/link";
+import { themeConfig } from "@/lib/theme";
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,65 +34,71 @@ export function LoginForm() {
   }
 
   return (
-    <Card>
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-semibold">Welcome back</CardTitle>
-        <CardDescription>
-          Enter your email and password to sign in
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="name@example.com"
-              required
-              disabled={isLoading}
+    <div className="space-y-8">
+      <form onSubmit={onSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-sm font-medium text-slate-600">
+            Email
+          </Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="name@example.com"
+            required
+            disabled={isLoading}
+            className="h-12 rounded-2xl border bg-white/85 px-4 text-sm shadow-sm"
+            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password" className="text-sm font-medium text-slate-600">
+            Password
+          </Label>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            required
+            disabled={isLoading}
+            className="h-12 rounded-2xl border bg-white/85 px-4 text-sm shadow-sm"
+            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+          />
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <label className="inline-flex items-center gap-2 text-slate-600">
+            <input
+              type="checkbox"
+              id="remember"
+              className="h-4 w-4 rounded border border-[rgba(120,57,238,0.24)]"
             />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              required
-              disabled={isLoading}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="remember"
-                className="h-4 w-4 rounded border-gray-300"
-              />
-              <Label htmlFor="remember" className="text-sm font-normal">
-                Remember me
-              </Label>
-            </div>
-            <Link
-              href="/forgot-password"
-              className="text-sm text-blue-600 hover:underline"
-            >
-              Forgot password?
-            </Link>
-          </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Signing in..." : "Log in"}
-          </Button>
-        </form>
-        <div className="mt-4 text-center text-sm">
-          Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-blue-600 hover:underline">
-            Sign up for free
+            Remember me
+          </label>
+          <Link
+            href="/forgot-password"
+            className="font-medium text-[var(--theme-primary-hex)] hover:underline"
+          >
+            Forgot password?
           </Link>
         </div>
-      </CardContent>
-    </Card>
+        <Button
+          type="submit"
+          className="h-12 w-full rounded-2xl text-sm font-semibold text-white shadow-lg"
+          style={{
+            backgroundColor: themeConfig.colors.primary,
+            boxShadow: themeConfig.colors.shadowPrimary,
+          }}
+          disabled={isLoading}
+        >
+          {isLoading ? "Signing in..." : "Log in"}
+        </Button>
+      </form>
+      <div className="rounded-2xl border border-dashed border-[rgba(120,57,238,0.2)] bg-[var(--theme-highlight)]/50 p-4 text-center text-sm text-slate-600">
+        Don&apos;t have an account?{" "}
+        <Link href="/signup" className="font-semibold text-[var(--theme-primary-hex)]">
+          Sign up for free
+        </Link>
+      </div>
+    </div>
   );
 }

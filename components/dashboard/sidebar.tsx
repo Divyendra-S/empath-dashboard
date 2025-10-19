@@ -2,11 +2,21 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Home, Users, Calendar, Clock, Settings, Plus, Search } from "lucide-react";
+import {
+  Home,
+  Users,
+  Calendar,
+  Clock,
+  Settings,
+  Plus,
+  Search,
+  Sparkles,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
+import { themeConfig } from "@/lib/theme";
 import { useLogout, useUser } from "@/lib/hooks/use-auth";
 
 const navigation = [
@@ -33,19 +43,27 @@ export function Sidebar() {
     : "ET";
 
   return (
-    <div className="flex h-full w-64 flex-col border-r bg-white" style={{ borderColor: 'rgb(237 233 254)' }}>
-      {/* Logo */}
-      <div className="flex h-14 items-center px-4 border-b" style={{ borderColor: 'rgb(237 233 254)' }}>
-        <h1 className="text-lg font-bold" style={{ color: '#7839EE' }}>
-          Empath
-        </h1>
+    <aside
+      className="flex h-full w-72 flex-col border-r"
+      style={{
+        borderColor: "rgba(120, 57, 238, 0.18)",
+        background: themeConfig.gradients.sidebar,
+      }}
+    >
+      <div
+        className="flex h-[57px] items-center px-5"
+        style={{ borderBottom: "1px solid rgba(120, 57, 238, 0.12)" }}
+      >
+        <p className="text-lg font-semibold text-slate-900">Empath</p>
       </div>
 
-      {/* New Note Button */}
-      <div className="p-4">
-        <Button 
-          className="w-full text-white shadow-sm hover:opacity-90"
-          style={{ backgroundColor: '#7839EE' }}
+      <div className="px-5 pt-6">
+        <Button
+          className="w-full justify-center rounded-2xl text-sm font-semibold text-white shadow-lg transition"
+          style={{
+            backgroundColor: themeConfig.colors.primary,
+            boxShadow: themeConfig.colors.shadowPrimary,
+          }}
           onClick={() => {}}
         >
           <Plus className="mr-2 h-4 w-4" />
@@ -53,21 +71,19 @@ export function Sidebar() {
         </Button>
       </div>
 
-      {/* Search Clients */}
-      <div className="px-4 pb-4">
+      <div className="px-5 pt-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <Input
-            placeholder="Search all clients..."
-            className="pl-9 bg-purple-50/30"
-            style={{ borderColor: 'rgb(240 237 255)' }}
+            placeholder="Search clients"
+            className="h-11 rounded-xl border bg-white/80 pl-10 text-sm shadow-sm"
+            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
             onClick={() => router.push("/dashboard/clients")}
           />
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 space-y-1 px-3">
+      <nav className="mt-6 flex-1 space-y-1 px-4">
         {navigation.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
@@ -77,48 +93,65 @@ export function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                "group flex items-center gap-3 rounded-2xl border px-4 py-3 text-sm font-medium transition-all",
                 isActive
-                  ? "shadow-sm"
-                  : "text-gray-700 hover:bg-purple-50/50"
+                  ? "bg-white text-[var(--theme-primary-hex)] shadow-sm"
+                  : "border-transparent text-slate-600 hover:bg-white/70 hover:text-[var(--theme-primary-hex)]"
               )}
-              style={isActive ? { backgroundColor: '#f6f4ff', color: '#7839EE' } : {}}
+              style={{
+                borderColor: isActive
+                  ? "rgba(120, 57, 238, 0.24)"
+                  : "transparent",
+              }}
             >
               <Icon
                 className={cn(
-                  "h-5 w-5 transition-colors",
-                  isActive ? "" : "text-gray-400"
+                  "h-5 w-5 transition",
+                  isActive
+                    ? "text-[var(--theme-primary-hex)]"
+                    : "text-slate-400 group-hover:text-[var(--theme-primary-hex)]"
                 )}
-                style={isActive ? { color: '#7839EE' } : {}}
               />
-              <span className={isActive ? "font-semibold" : ""}>{item.name}</span>
+              <span className={isActive ? "font-semibold" : ""}>
+                {item.name}
+              </span>
             </Link>
           );
         })}
       </nav>
 
-      {/* User Profile at Bottom */}
-      <div className="p-4 border-t" style={{ borderColor: 'rgb(237 233 254)' }}>
-        <div className="flex items-center gap-3">
-          <Avatar className="h-9 w-9">
-            <AvatarFallback className="text-white text-xs font-semibold" style={{ backgroundColor: '#7839EE' }}>
-              {initials}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
-              {user?.fullName || "Therapist"}
-            </p>
-            <button
-              onClick={() => logout()}
-              disabled={isPending}
-              className="text-xs text-gray-500 hover:text-red-600 transition-colors"
-            >
-              {isPending ? "Logging out..." : "Sign out"}
-            </button>
+      <div className="px-5 pb-6 pt-6">
+        <div
+          className="rounded-2xl border bg-white/80 p-4 shadow-sm"
+          style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+        >
+          <div className="flex items-center gap-3">
+            <Avatar className="h-10 w-10">
+              <AvatarFallback
+                className="rounded-xl text-xs font-semibold text-white"
+                style={{
+                  background: `linear-gradient(135deg, ${themeConfig.colors.primary}, ${themeConfig.colors.primaryHover})`,
+                  boxShadow: themeConfig.colors.shadowPrimary,
+                }}
+              >
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold text-slate-900">
+                {user?.fullName || "Therapist"}
+              </p>
+              <button
+                onClick={() => logout()}
+                disabled={isPending}
+                className="mt-1 text-xs font-medium text-slate-500 transition hover:text-rose-500"
+              >
+                {isPending ? "Logging out..." : "Sign out"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }

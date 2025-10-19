@@ -26,6 +26,7 @@ import { useClients } from "@/lib/hooks/use-clients";
 import { useCreateSession, useUpdateSession } from "@/lib/hooks/use-sessions";
 import type { Session } from "@/lib/types";
 import { sessionSchema } from "@/lib/validations/session";
+import { themeConfig } from "@/lib/theme";
 
 interface SessionFormProps {
   session?: Session;
@@ -108,148 +109,229 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pb-4">
-        <FormField
-          control={form.control}
-          name="client_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Client</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a client" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {clients?.map((client) => (
-                    <SelectItem key={client.id} value={client.id}>
-                      {client.full_name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <section className="space-y-5">
+          <header className="space-y-1">
+            <h2 className="text-lg font-semibold text-slate-900">Session overview</h2>
+            <p className="text-sm text-slate-500">
+              Outline the essentials for this conversation.
+            </p>
+          </header>
+          <div className="grid gap-5 md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="client_id"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-1.5">
+                  <FormLabel className="text-sm font-medium text-slate-600">
+                    Client
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
+                        style={{
+                          borderColor: "rgba(120, 57, 238, 0.18)",
+                          backgroundColor: "rgba(255, 255, 255, 0.92)",
+                        }}
+                      >
+                        <SelectValue placeholder="Select a client" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {clients?.map((client) => (
+                        <SelectItem key={client.id} value={client.id}>
+                          {client.full_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="scheduled_at"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-1.5">
+                  <FormLabel className="text-sm font-medium text-slate-600">
+                    Scheduled date & time
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="datetime-local"
+                      {...field}
+                      className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
+                      style={{
+                        borderColor: "rgba(120, 57, 238, 0.18)",
+                        backgroundColor: "rgba(255, 255, 255, 0.92)",
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="duration_minutes"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-1.5">
+                  <FormLabel className="text-sm font-medium text-slate-600">
+                    Duration (minutes)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      min="1"
+                      {...field}
+                      className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
+                      style={{
+                        borderColor: "rgba(120, 57, 238, 0.18)",
+                        backgroundColor: "rgba(255, 255, 255, 0.92)",
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription className="text-xs text-slate-500">
+                    Estimated session duration
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </section>
 
-        <FormField
-          control={form.control}
-          name="scheduled_at"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Scheduled Date & Time</FormLabel>
-              <FormControl>
-                <Input type="datetime-local" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <section className="space-y-5">
+          <header className="space-y-1">
+            <h2 className="text-lg font-semibold text-slate-900">Call setup</h2>
+            <p className="text-sm text-slate-500">
+              Choose how the session will take place.
+            </p>
+          </header>
+          <div className="grid gap-5 md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="call_type"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-1.5">
+                  <FormLabel className="text-sm font-medium text-slate-600">
+                    Call type
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
+                        style={{
+                          borderColor: "rgba(120, 57, 238, 0.18)",
+                          backgroundColor: "rgba(255, 255, 255, 0.92)",
+                        }}
+                      >
+                        <SelectValue placeholder="Select call type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="internal">Internal (Daily.co)</SelectItem>
+                      <SelectItem value="external_link">
+                        External Link (Zoom/Meet)
+                      </SelectItem>
+                      <SelectItem value="local_recording">
+                        Local Recording
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormDescription className="text-xs text-slate-500">
+                    Choose how you'll conduct this session
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="duration_minutes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Duration (minutes)</FormLabel>
-              <FormControl>
-                <Input type="number" min="1" {...field} />
-              </FormControl>
-              <FormDescription>
-                Estimated session duration in minutes
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            {watchCallType === "external_link" && (
+              <FormField
+                control={form.control}
+                name="meeting_url"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col gap-1.5">
+                    <FormLabel className="text-sm font-medium text-slate-600">
+                      Meeting URL
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="https://zoom.us/j/..."
+                        {...field}
+                        className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
+                        style={{
+                          borderColor: "rgba(120, 57, 238, 0.18)",
+                          backgroundColor: "rgba(255, 255, 255, 0.92)",
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+          </div>
+        </section>
 
-        <FormField
-          control={form.control}
-          name="call_type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Call Type</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select call type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="internal">Internal (Daily.co)</SelectItem>
-                  <SelectItem value="external_link">
-                    External Link (Zoom/Meet)
-                  </SelectItem>
-                  <SelectItem value="local_recording">
-                    Local Recording
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Choose how you&apos;ll conduct this session
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {watchCallType === "external_link" && (
+        <section className="space-y-5">
+          <header className="space-y-1">
+            <h2 className="text-lg font-semibold text-slate-900">Notes</h2>
+            <p className="text-sm text-slate-500">
+              Capture context and goals for this meeting.
+            </p>
+          </header>
           <FormField
             control={form.control}
-            name="meeting_url"
+            name="notes"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Meeting URL</FormLabel>
+              <FormItem className="flex flex-col gap-1.5">
+                <FormLabel className="text-sm font-medium text-slate-600">
+                  Session notes
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="https://zoom.us/j/..." {...field} />
+                  <Textarea
+                    placeholder="Add any notes about this session..."
+                    className="min-h-[140px] resize-none rounded-2xl border bg-white/80 px-4 py-3 text-sm shadow-sm"
+                    style={{
+                      borderColor: "rgba(120, 57, 238, 0.18)",
+                      backgroundColor: "rgba(255, 255, 255, 0.92)",
+                    }}
+                    rows={4}
+                    {...field}
+                  />
                 </FormControl>
-                <FormDescription>
-                  External meeting link (e.g., Zoom, Google Meet)
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-        )}
+        </section>
 
-        <FormField
-          control={form.control}
-          name="notes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Notes</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Add any notes about this session..."
-                  className="resize-none"
-                  rows={4}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="flex gap-4 pt-2">
+        <div className="flex flex-col gap-3 border-t border-dashed border-[rgba(120,57,238,0.16)] pt-6 sm:flex-row">
           <Button
             type="submit"
             disabled={createSession.isPending || updateSession.isPending}
-            className="flex-1"
+            className="flex-1 rounded-xl text-sm font-semibold text-white shadow-lg"
+            style={{
+              backgroundColor: themeConfig.colors.primary,
+              boxShadow: themeConfig.colors.shadowPrimary,
+            }}
           >
             {createSession.isPending || updateSession.isPending
               ? "Saving..."
               : session
-              ? "Update Session"
-              : "Create Session"}
+              ? "Update session"
+              : "Create session"}
           </Button>
-          {!onSuccess && (
-            <Button type="button" variant="outline" onClick={() => router.back()}>
-              Cancel
-            </Button>
-          )}
+          <Button
+            type="button"
+            variant="ghost"
+            className="rounded-xl text-sm font-medium text-slate-600"
+            onClick={() => (onSuccess ? onSuccess() : router.back())}
+          >
+            Cancel
+          </Button>
         </div>
       </form>
     </Form>

@@ -31,7 +31,7 @@ export function RescheduleDialog({
 }: RescheduleDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
+      <AlertDialogContent className="border" style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}>
         <AlertDialogHeader>
           <AlertDialogTitle>Reschedule Session</AlertDialogTitle>
           <AlertDialogDescription className="space-y-2">

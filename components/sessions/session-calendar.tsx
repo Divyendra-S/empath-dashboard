@@ -11,6 +11,7 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { useUpdateSession } from "@/lib/hooks/use-sessions";
 import { RescheduleDialog } from "./reschedule-dialog";
 import type { SessionWithClient, SessionStatus } from "@/lib/types";
+import { themeConfig } from "@/lib/theme";
 
 const DragAndDropCalendar = withDragAndDrop<CalendarEvent, object>(Calendar);
 
@@ -42,10 +43,10 @@ interface SessionCalendarProps {
 }
 
 const statusColors = {
-  scheduled: "#3b82f6", // blue
-  in_progress: "#10b981", // green
-  completed: "#6b7280", // gray
-  cancelled: "#ef4444", // red
+  scheduled: themeConfig.colors.primary,
+  in_progress: "#10b981",
+  completed: "#6b7280",
+  cancelled: "#ef4444",
 };
 
 export function SessionCalendar({
@@ -155,30 +156,34 @@ export function SessionCalendar({
 
   return (
     <>
-      <div className="h-[700px] bg-white rounded-lg p-4 shadow-sm">
-        <DragAndDropCalendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          view={view}
-          onView={onViewChange}
-          date={date}
-          onNavigate={onNavigate}
-          onSelectEvent={handleSelectEvent}
-          onSelectSlot={handleSelectSlot}
-          onEventDrop={handleEventDrop}
-          eventPropGetter={eventStyleGetter}
-          selectable
-          resizable={false}
-          draggableAccessor={() => true}
-          popup
-          views={["month", "week", "day", "agenda"]}
-          step={15}
-          showMultiDayTimes
-          defaultDate={new Date()}
-          className="empath-calendar"
-        />
+      <div
+        className="rounded-3xl bg-white/90"
+      >
+        <div className="h-[680px] overflow-hidden rounded-2xl bg-white">
+          <DragAndDropCalendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            view={view}
+            onView={onViewChange}
+            date={date}
+            onNavigate={onNavigate}
+            onSelectEvent={handleSelectEvent}
+            onSelectSlot={handleSelectSlot}
+            onEventDrop={handleEventDrop}
+            eventPropGetter={eventStyleGetter}
+            selectable
+            resizable={false}
+            draggableAccessor={() => true}
+            popup
+            views={["month", "week", "day", "agenda"]}
+            step={15}
+            showMultiDayTimes
+            defaultDate={new Date()}
+            className="empath-calendar"
+          />
+        </div>
       </div>
 
       {rescheduleDialog && (
