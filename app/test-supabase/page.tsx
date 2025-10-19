@@ -4,7 +4,7 @@ export default async function TestSupabase() {
   const supabase = await createClient();
 
   // Test database connection
-  const { data: profiles, error: profileError } = await supabase
+  const { error: profileError } = await supabase
     .from("profiles")
     .select("*")
     .limit(1);
@@ -12,7 +12,6 @@ export default async function TestSupabase() {
   // Test auth connection
   const {
     data: { user },
-    error: authError,
   } = await supabase.auth.getUser();
 
   // Get table count

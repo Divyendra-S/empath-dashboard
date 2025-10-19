@@ -35,7 +35,12 @@ interface SessionFormProps {
   onSuccess?: () => void;
 }
 
-export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSuccess }: SessionFormProps) {
+export function SessionForm({
+  session,
+  defaultClientId,
+  defaultScheduledAt,
+  onSuccess,
+}: SessionFormProps) {
   const router = useRouter();
   const { data: clients } = useClients();
   const createSession = useCreateSession();
@@ -59,10 +64,10 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
   function formatDateForInput(dateString: string): string {
     const date = new Date(dateString);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 
@@ -72,14 +77,16 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
     // Convert datetime-local to ISO string preserving local time
     const scheduledAtLocal = data.scheduled_at as string;
     const scheduledAtISO = new Date(scheduledAtLocal).toISOString();
-    
+
     const submitData = {
       client_id: data.client_id as string,
       scheduled_at: scheduledAtISO,
       meeting_url: (data.meeting_url as string) || undefined,
       duration_minutes: (data.duration_minutes as number) || undefined,
       notes: (data.notes as string) || undefined,
-      call_type: (data.call_type as "internal" | "external_link" | "local_recording") || undefined,
+      call_type:
+        (data.call_type as "internal" | "external_link" | "local_recording") ||
+        undefined,
     };
 
     try {
@@ -112,7 +119,9 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <section className="space-y-5">
           <header className="space-y-1">
-            <h2 className="text-lg font-semibold text-slate-900">Session overview</h2>
+            <h2 className="text-lg font-semibold text-slate-900">
+              Session overview
+            </h2>
             <p className="text-sm text-slate-500">
               Outline the essentials for this conversation.
             </p>
@@ -126,9 +135,13 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
                   <FormLabel className="text-sm font-medium text-slate-600">
                     Client
                   </FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
-                      <SelectTrigger className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
+                      <SelectTrigger
+                        className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
                         style={{
                           borderColor: "rgba(120, 57, 238, 0.18)",
                           backgroundColor: "rgba(255, 255, 255, 0.92)",
@@ -218,9 +231,13 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
                   <FormLabel className="text-sm font-medium text-slate-600">
                     Call type
                   </FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
-                      <SelectTrigger className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
+                      <SelectTrigger
+                        className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
                         style={{
                           borderColor: "rgba(120, 57, 238, 0.18)",
                           backgroundColor: "rgba(255, 255, 255, 0.92)",
@@ -230,7 +247,9 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="internal">Internal (Daily.co)</SelectItem>
+                      <SelectItem value="internal">
+                        Internal (Daily.co)
+                      </SelectItem>
                       <SelectItem value="external_link">
                         External Link (Zoom/Meet)
                       </SelectItem>
@@ -240,7 +259,7 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
                     </SelectContent>
                   </Select>
                   <FormDescription className="text-xs text-slate-500">
-                    Choose how you'll conduct this session
+                    Choose how you&apos;ll conduct this session
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
