@@ -168,54 +168,83 @@ export default function CalendarPage() {
           </div>
         </div>
 
-        <div
-          className="rounded-3xl border bg-white/90 p-4"
-          style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-        >
-          {error ? (
+        {error ? (
+          <div
+            className="rounded-3xl border bg-white/90 p-6 shadow-sm"
+            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+          >
             <div className="flex flex-col items-center justify-center rounded-2xl border border-rose-200 bg-rose-50/70 py-16 text-center">
               <p className="text-sm font-semibold text-rose-500">
                 Error loading sessions
               </p>
               <p className="mt-2 text-xs text-rose-400">{error.message}</p>
             </div>
-          ) : isLoading ? (
-            <Skeleton className="h-[700px] w-full rounded-2xl" />
-          ) : sessions ? (
-            <SessionCalendar
-              sessions={sessions}
-              view={calendarView}
-              onViewChange={handleViewChange}
-              date={calendarDate}
-              onNavigate={setCalendarDate}
-            />
-          ) : null}
-        </div>
+          </div>
+        ) : isLoading ? (
+          <div
+            className="rounded-3xl border bg-white/90 p-6 shadow-sm"
+            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+          >
+            <Skeleton className="h-[620px] w-full rounded-2xl" />
+          </div>
+        ) : sessions ? (
+          <SessionCalendar
+            sessions={sessions}
+            view={calendarView}
+            onViewChange={handleViewChange}
+            date={calendarDate}
+            onNavigate={setCalendarDate}
+          />
+        ) : null}
       </div>
 
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <SheetContent
-          className="w-full overflow-y-auto border-l bg-white/90 p-0 shadow-2xl sm:max-w-2xl"
+          className="w-full border-l bg-white/95 p-0 shadow-2xl sm:max-w-2xl"
           style={{ borderColor: "rgba(120, 57, 238, 0.24)" }}
           onEscapeKeyDown={handleCloseDrawer}
           onInteractOutside={handleCloseDrawer}
         >
-          <SheetHeader
-            className="space-y-2 border-b px-6 pb-6 pt-6"
-            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-          >
-            <SheetTitle className="text-2xl font-semibold text-slate-900">
-              Create a new session
-            </SheetTitle>
-            <SheetDescription className="text-sm text-slate-500">
-              Organize client time with clarity and care.
-            </SheetDescription>
-          </SheetHeader>
-          <div className="px-6 py-6">
-            <SessionForm
-              defaultScheduledAt={scheduledAtParam || undefined}
-              onSuccess={handleCloseDrawer}
-            />
+          <div className="flex h-full flex-col">
+            <div
+              className="relative overflow-hidden border-b px-6 py-8"
+              style={{
+                borderColor: "rgba(120, 57, 238, 0.18)",
+                background: themeConfig.gradients.panel,
+              }}
+            >
+              <div
+                className="absolute -top-16 right-6 h-32 w-32 rounded-full blur-3xl"
+                style={{ background: themeConfig.colors.highlightStrong }}
+              />
+              <div
+                className="absolute -bottom-20 left-0 h-36 w-36 rounded-full blur-3xl"
+                style={{ background: themeConfig.colors.highlight }}
+              />
+              <div className="relative space-y-4">
+                <div
+                  className="inline-flex items-center gap-2 rounded-full border bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[var(--theme-primary-hex)]/80"
+                  style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                >
+                  <Plus className="h-3.5 w-3.5 text-[var(--theme-primary-hex)]" />
+                  New Session
+                </div>
+                <SheetHeader className="space-y-2 p-0">
+                  <SheetTitle className="text-2xl font-semibold text-slate-900">
+                    Create a new session
+                  </SheetTitle>
+                  <SheetDescription className="text-sm text-slate-600">
+                    Organize client time with clarity and care.
+                  </SheetDescription>
+                </SheetHeader>
+              </div>
+            </div>
+            <div className="flex-1 overflow-auto px-6 py-6">
+              <SessionForm
+                defaultScheduledAt={scheduledAtParam || undefined}
+                onSuccess={handleCloseDrawer}
+              />
+            </div>
           </div>
         </SheetContent>
       </Sheet>

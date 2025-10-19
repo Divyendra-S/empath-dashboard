@@ -72,12 +72,25 @@ export default function ClientsPage() {
       </div>
 
       <div
-        className="rounded-3xl border bg-white/80 p-6 shadow-sm backdrop-blur-sm"
+        className="rounded-3xl border bg-white/85 p-6 shadow-sm"
         style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
       >
-        <div className="flex items-center gap-2 pb-3 text-xs font-medium uppercase tracking-[0.3em] text-slate-400">
-          <NotebookPen className="h-4 w-4 text-[var(--theme-primary-hex)]/80" />
-          Client Lookup
+        <div className="flex items-center justify-between gap-4 pb-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+            <NotebookPen className="h-4 w-4 text-[var(--theme-primary-hex)]" />
+            Client Lookup
+          </div>
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            className="hidden rounded-xl text-xs font-medium text-slate-600 hover:text-[var(--theme-primary-hex)] md:flex"
+            style={{ borderRadius: "0.75rem" }}
+          >
+            <Link href="/dashboard/clients/new">
+              <Plus className="mr-2 h-4 w-4" /> Add Client
+            </Link>
+          </Button>
         </div>
         <ClientSearch value={search} onChange={setSearch} />
       </div>

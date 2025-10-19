@@ -161,7 +161,7 @@
  }
 
  .empath-calendar .rbc-toolbar {
-  padding: 16px;
+  padding: 16px 0px 16px 0px;
   margin-bottom: 16px;
   display: flex;
   justify-content: space-between;

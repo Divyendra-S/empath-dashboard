@@ -26,6 +26,14 @@ export default function DashboardPage() {
   const { data: upcomingSessions, isLoading: upcomingLoading } =
     useUpcomingSessions();
 
+  const isInitialLoading =
+    statsLoading &&
+    sessionsLoading &&
+    upcomingLoading &&
+    !stats &&
+    !recentSessions &&
+    !upcomingSessions;
+
   // Get current date info for welcome message
   const now = new Date();
   const timeOfDay =
@@ -70,6 +78,10 @@ export default function DashboardPage() {
       helperTone: "text-slate-500",
     },
   ];
+
+  if (isInitialLoading) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <div className="space-y-10">
@@ -257,6 +269,79 @@ export default function DashboardPage() {
               </Button>
             </div>
           )}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-10">
+      <section
+        className="relative overflow-hidden rounded-3xl border p-6 shadow-sm"
+        style={{
+          borderColor: "rgba(120, 57, 238, 0.18)",
+          background: themeConfig.gradients.panel,
+        }}
+      >
+        <div
+          className="absolute -top-16 right-0 h-36 w-36 rounded-full blur-3xl"
+          style={{ background: themeConfig.colors.highlightStrong }}
+        />
+        <div
+          className="absolute -bottom-20 -left-10 h-44 w-44 rounded-full blur-3xl"
+          style={{ background: themeConfig.colors.highlight }}
+        />
+        <div className="relative space-y-4">
+          <Skeleton className="h-6 w-44" />
+          <Skeleton className="h-4 w-72" />
+          <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {[...Array(4)].map((_, index) => (
+              <div
+                key={index}
+                className="rounded-2xl border p-4 backdrop-blur-sm"
+                style={{
+                  borderColor: "rgba(120, 57, 238, 0.16)",
+                  backgroundColor: "rgba(255,255,255,0.82)",
+                }}
+              >
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="mt-6 h-8 w-20" />
+                <Skeleton className="mt-4 h-3 w-16" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <Skeleton className="h-9 w-24 rounded-xl" />
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[...Array(3)].map((_, index) => (
+            <Skeleton key={index} className="h-32 rounded-2xl" />
+          ))}
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-44" />
+            <Skeleton className="h-4 w-72" />
+          </div>
+          <Skeleton className="h-9 w-28 rounded-xl" />
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[...Array(3)].map((_, index) => (
+            <Skeleton key={index} className="h-32 rounded-2xl" />
+          ))}
         </div>
       </section>
     </div>

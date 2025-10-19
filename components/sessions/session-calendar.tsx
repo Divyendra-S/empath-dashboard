@@ -156,30 +156,34 @@ export function SessionCalendar({
 
   return (
     <>
-      <div className="h-[700px] bg-white rounded-lg">
-        <DragAndDropCalendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          view={view}
-          onView={onViewChange}
-          date={date}
-          onNavigate={onNavigate}
-          onSelectEvent={handleSelectEvent}
-          onSelectSlot={handleSelectSlot}
-          onEventDrop={handleEventDrop}
-          eventPropGetter={eventStyleGetter}
-          selectable
-          resizable={false}
-          draggableAccessor={() => true}
-          popup
-          views={["month", "week", "day", "agenda"]}
-          step={15}
-          showMultiDayTimes
-          defaultDate={new Date()}
-          className="empath-calendar"
-        />
+      <div
+        className="rounded-3xl bg-white/90"
+      >
+        <div className="h-[680px] overflow-hidden rounded-2xl bg-white">
+          <DragAndDropCalendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            view={view}
+            onView={onViewChange}
+            date={date}
+            onNavigate={onNavigate}
+            onSelectEvent={handleSelectEvent}
+            onSelectSlot={handleSelectSlot}
+            onEventDrop={handleEventDrop}
+            eventPropGetter={eventStyleGetter}
+            selectable
+            resizable={false}
+            draggableAccessor={() => true}
+            popup
+            views={["month", "week", "day", "agenda"]}
+            step={15}
+            showMultiDayTimes
+            defaultDate={new Date()}
+            className="empath-calendar"
+          />
+        </div>
       </div>
 
       {rescheduleDialog && (
