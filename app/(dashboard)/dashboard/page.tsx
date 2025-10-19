@@ -37,204 +37,183 @@ export default function DashboardPage() {
     month: "long",
     day: "numeric",
   });
+  const metricCards = [
+    {
+      label: "Total Clients",
+      value: stats?.totalClients || 0,
+      helper: "Active clients",
+      icon: Users,
+      tone: "from-blue-500 to-indigo-500",
+      helperTone: "text-emerald-600",
+    },
+    {
+      label: "Today",
+      value: 0,
+      helper: "Sessions today",
+      icon: CalendarIcon,
+      tone: "from-purple-500 to-purple-600",
+      helperTone: "text-slate-500",
+    },
+    {
+      label: "This Week",
+      value: stats?.upcomingSessions || 0,
+      helper: "Upcoming",
+      icon: Clock,
+      tone: "from-pink-500 to-rose-500",
+      helperTone: "text-slate-500",
+    },
+    {
+      label: "Completed",
+      value: stats?.thisWeekSessions || 0,
+      helper: "This week",
+      icon: CheckCircle2,
+      tone: "from-emerald-500 to-teal-500",
+      helperTone: "text-slate-500",
+    },
+  ];
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Header */}
-      <div className="bg-gradient-to-br from-purple-50 via-violet-50 to-fuchsia-50 rounded-xl p-6 border border-purple-100/50">
-        <h1 className="text-2xl font-semibold text-gray-900">
-          Good {timeOfDay} 👋
-        </h1>
-        <p className="text-sm text-gray-600 mt-1">{dateString}</p>
-      </div>
-
-      {/* Key Metrics Cards */}
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-        {/* Total Clients */}
-        <div className="bg-white rounded-xl p-5 border border-gray-200/60 hover:shadow-lg hover:border-gray-300/60 transition-all duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Total Clients
-            </span>
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
-              <Users className="h-4 w-4 text-white" />
-            </div>
-          </div>
-          {statsLoading ? (
-            <Skeleton className="h-8 w-16" />
-          ) : (
-            <>
-              <div className="text-3xl font-bold text-gray-900 mb-1">
-                {stats?.totalClients || 0}
+    <div className="space-y-10">
+      <section className="relative overflow-hidden rounded-3xl border border-purple-100/60 bg-gradient-to-br from-purple-50 via-violet-50 to-fuchsia-50 p-6 shadow-sm">
+        <div className="absolute -top-16 right-0 h-36 w-36 rounded-full bg-purple-200/40 blur-3xl" />
+        <div className="absolute -bottom-20 -left-10 h-44 w-44 rounded-full bg-fuchsia-200/30 blur-3xl" />
+        <div className="relative">
+          <h1 className="text-2xl font-semibold text-slate-900">
+            Good {timeOfDay} 👋
+          </h1>
+          <p className="mt-1 text-sm text-slate-600">{dateString}</p>
+          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {metricCards.map((card, index) => (
+              <div
+                key={card.label}
+                className="rounded-2xl border border-white/60 bg-white/70 p-4 backdrop-blur-sm"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    {card.label}
+                  </span>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/20 to-purple-600/40 text-purple-600">
+                    {index === 0 ? (
+                      <Users className="h-4 w-4" />
+                    ) : index === 1 ? (
+                      <CalendarIcon className="h-4 w-4" />
+                    ) : index === 2 ? (
+                      <Clock className="h-4 w-4" />
+                    ) : (
+                      <CheckCircle2 className="h-4 w-4" />
+                    )}
+                  </div>
+                </div>
+                <div className="mt-4">
+                  {statsLoading ? (
+                    <Skeleton className="h-8 w-16" />
+                  ) : (
+                    <>
+                      <div className="text-3xl font-semibold text-slate-900">
+                        {card.value}
+                      </div>
+                      <p className="mt-1 text-xs font-medium text-slate-500">
+                        {card.helper}
+                      </p>
+                    </>
+                  )}
+                </div>
               </div>
-              <p className="text-xs text-green-600 flex items-center font-medium">
-                <TrendingUp className="h-3 w-3 mr-1" />
-                Active clients
-              </p>
-            </>
-          )}
-        </div>
-
-        {/* Today */}
-        <div className="bg-white rounded-xl p-5 border border-gray-200/60 hover:shadow-lg hover:border-gray-300/60 transition-all duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Today
-            </span>
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-md">
-              <CalendarIcon className="h-4 w-4 text-white" />
-            </div>
+            ))}
           </div>
-          {statsLoading ? (
-            <Skeleton className="h-8 w-16" />
-          ) : (
-            <>
-              <div className="text-3xl font-bold text-gray-900 mb-1">0</div>
-              <p className="text-xs text-gray-500 font-medium">
-                Sessions today
-              </p>
-            </>
-          )}
         </div>
+      </section>
 
-        {/* This Week */}
-        <div className="bg-white rounded-xl p-5 border border-gray-200/60 hover:shadow-lg hover:border-gray-300/60 transition-all duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              This Week
-            </span>
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-md">
-              <Clock className="h-4 w-4 text-white" />
-            </div>
-          </div>
-          {statsLoading ? (
-            <Skeleton className="h-8 w-16" />
-          ) : (
-            <>
-              <div className="text-3xl font-bold text-gray-900 mb-1">
-                {stats?.upcomingSessions || 0}
-              </div>
-              <p className="text-xs text-gray-500 font-medium">Upcoming</p>
-            </>
-          )}
-        </div>
-
-        {/* Completed */}
-        <div className="bg-white rounded-xl p-5 border border-gray-200/60 hover:shadow-lg hover:border-gray-300/60 transition-all duration-200">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Completed
-            </span>
-            <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-md">
-              <CheckCircle2 className="h-4 w-4 text-white" />
-            </div>
-          </div>
-          {statsLoading ? (
-            <Skeleton className="h-8 w-16" />
-          ) : (
-            <>
-              <div className="text-3xl font-bold text-gray-900 mb-1">
-                {stats?.thisWeekSessions || 0}
-              </div>
-              <p className="text-xs text-gray-500 font-medium">This week</p>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Recent Sessions */}
-      <div className="space-y-5">
-        <div className="flex items-center justify-between">
+      <section className="rounded-3xl bg-white p-6 shadow-sm">
+        <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Recent Sessions</h2>
-            <p className="text-sm text-gray-500 mt-1">Your latest sessions</p>
+            <h2 className="text-lg font-semibold text-slate-900">Recent Sessions</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Track the latest conversations at a glance
+            </p>
           </div>
           <Button
             asChild
             variant="ghost"
             size="sm"
-            className="hover:bg-gray-100 text-gray-700 font-medium"
+            className="hover:bg-slate-100 text-slate-700"
           >
             <Link href="/dashboard/sessions">
               View all <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
-
-        {sessionsLoading ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {[...Array(3)].map((_, i) => (
-              <Skeleton key={i} className="h-32" />
-            ))}
-          </div>
-        ) : recentSessions && recentSessions.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {recentSessions.map((session) => (
-              <SessionCard key={session.id} session={session} />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-gray-200/60">
-            <div className="h-16 w-16 rounded-full bg-gray-50 flex items-center justify-center mb-4">
-              <Clock className="h-8 w-8 text-gray-400" />
+        <div className="mt-6">
+          {sessionsLoading ? (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {[...Array(4)].map((_, i) => (
+                <Skeleton key={i} className="h-32" />
+              ))}
             </div>
-            <h3 className="text-base font-semibold text-gray-900 mb-1">
-              No recent sessions
-            </h3>
-            <p className="text-sm text-gray-500">
-              You haven&apos;t completed any sessions yet
-            </p>
-          </div>
-        )}
-      </div>
+          ) : recentSessions && recentSessions.length > 0 ? (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {recentSessions.map((session) => (
+                <SessionCard key={session.id} session={session} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
+              <Clock className="h-10 w-10 text-slate-400" />
+              <h3 className="mt-4 text-base font-semibold text-slate-900">
+                No recent sessions yet
+              </h3>
+              <p className="mt-1 text-sm text-slate-500">
+                Completed sessions will appear here for quick review.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
 
-      {/* Upcoming Sessions */}
-      <div className="space-y-5">
-        <div className="flex items-center justify-between">
+      <section className="rounded-3xl bg-white p-6 shadow-sm">
+        <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-lg font-semibold text-slate-900">
               Upcoming Sessions
             </h2>
-            <p className="text-sm text-gray-500 mt-1">
-              Your scheduled sessions
+            <p className="mt-1 text-sm text-slate-500">
+              Stay ahead with a clear view of what&apos;s next
             </p>
           </div>
           <Button
             asChild
             variant="ghost"
             size="sm"
-            className="hover:bg-gray-100 text-gray-700 font-medium"
+            className="hover:bg-slate-100 text-slate-700"
           >
             <Link href="/dashboard/calendar">
-              View Calendar <ArrowRight className="ml-2 h-4 w-4" />
+              View calendar <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
-
-        {/* Empty state - will be populated with real data later */}
-        <div className="flex flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-gray-200/60">
-          <div className="h-16 w-16 rounded-full bg-purple-50 flex items-center justify-center mb-4">
-            <CalendarIcon className="h-8 w-8 text-purple-500" />
+        <div className="mt-6">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-purple-200 bg-purple-50/60 p-10 text-center">
+            <CalendarIcon className="h-10 w-10 text-purple-500" />
+            <h3 className="mt-4 text-base font-semibold text-slate-900">
+              No upcoming sessions
+            </h3>
+            <p className="mt-1 text-sm text-slate-500">
+              Schedule your next session to populate this view.
+            </p>
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="mt-5 border-purple-300 bg-white/70 font-medium text-purple-600 hover:bg-purple-100"
+            >
+              <Link href="/dashboard/calendar">
+                <Plus className="mr-2 h-4 w-4" />
+                Add to calendar
+              </Link>
+            </Button>
           </div>
-          <h3 className="text-base font-semibold text-gray-900 mb-1">
-            No upcoming sessions
-          </h3>
-          <p className="text-sm text-gray-500 mb-5">
-            Schedule your next session to get started
-          </p>
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="font-medium border-purple-200 text-purple-600 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300"
-          >
-            <Link href="/dashboard/calendar">
-              <Plus className="mr-2 h-4 w-4" />
-              Schedule a Session
-            </Link>
-          </Button>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
