@@ -13,6 +13,7 @@ import {
   Play,
   CheckCircle,
   XCircle,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,14 +27,14 @@ import {
 } from "@/lib/hooks/use-sessions";
 import type { SessionStatus } from "@/lib/types";
 
-const statusColors = {
+const statusColors: Record<SessionStatus, string> = {
   scheduled: "bg-blue-100 text-blue-800",
   in_progress: "bg-green-100 text-green-800",
   completed: "bg-gray-100 text-gray-800",
   cancelled: "bg-red-100 text-red-800",
 };
 
-const statusLabels = {
+const statusLabels: Record<SessionStatus, string> = {
   scheduled: "Scheduled",
   in_progress: "In Progress",
   completed: "Completed",
@@ -87,8 +88,8 @@ export default function SessionDetailPage({
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-semibold">Session Details</h1>
-          <Badge className={`${statusColors[session.status]} mt-2`}>
-            {statusLabels[session.status]}
+          <Badge className={`${statusColors[session.status as SessionStatus]} mt-2`}>
+            {statusLabels[session.status as SessionStatus]}
           </Badge>
         </div>
         <div className="flex gap-2">
@@ -115,7 +116,8 @@ export default function SessionDetailPage({
       {/* Main Content */}
       <div className="grid gap-6 md:grid-cols-3">
         {/* Session Info */}
-        <Card className="md:col-span-2">
+        <div className="md:col-span-2 space-y-6">
+        <Card>
           <CardHeader>
             <CardTitle>Session Information</CardTitle>
           </CardHeader>
@@ -202,7 +204,60 @@ export default function SessionDetailPage({
           </CardContent>
         </Card>
 
-        {/* Actions */}
+        {/* Recording Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Recording</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {session.status === "completed" ? (
+              <div className="space-y-4">
+                <div className="border-2 border-dashed rounded-lg p-8 text-center">
+                  <Video className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-sm text-gray-600">
+                    Recording will be available here
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Phase 4: Video Calling & Recording
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <p className="text-sm">Recording available after session completion</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Transcription Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Transcription</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {session.status === "completed" ? (
+              <div className="space-y-4">
+                <div className="border-2 border-dashed rounded-lg p-8 text-center">
+                  <FileText className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-sm text-gray-600">
+                    Transcription will be displayed here
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Phase 5: Automatic Transcription with Groq
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <p className="text-sm">Transcription available after session completion</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+        </div>
+
+        {/* Actions Sidebar */}
         <Card>
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>

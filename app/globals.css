@@ -120,3 +120,137 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* React Big Calendar Custom Styles */
+.empath-calendar {
+  font-family: inherit;
+}
+
+.empath-calendar .rbc-header {
+  padding: 12px 4px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.empath-calendar .rbc-today {
+  background-color: #f0f9ff;
+}
+
+.empath-calendar .rbc-off-range-bg {
+  background-color: #f9fafb;
+}
+
+.empath-calendar .rbc-event {
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.empath-calendar .rbc-event:hover {
+  opacity: 0.85;
+}
+
+.empath-calendar .rbc-event.rbc-selected {
+  opacity: 0.95;
+}
+
+.empath-calendar .rbc-toolbar {
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.empath-calendar .rbc-toolbar button {
+  padding: 8px 16px;
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.empath-calendar .rbc-toolbar button:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.empath-calendar .rbc-toolbar button.rbc-active {
+  background-color: #1f2937;
+  color: white;
+  border-color: #1f2937;
+}
+
+.empath-calendar .rbc-toolbar button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.empath-calendar .rbc-month-view,
+.empath-calendar .rbc-time-view,
+.empath-calendar .rbc-agenda-view {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.empath-calendar .rbc-time-slot {
+  border-top: 1px solid #f3f4f6;
+}
+
+.empath-calendar .rbc-day-slot .rbc-time-slot {
+  border-top: 1px solid #f3f4f6;
+}
+
+.empath-calendar .rbc-current-time-indicator {
+  background-color: #ef4444;
+  height: 2px;
+}
+
+.empath-calendar .rbc-show-more {
+  color: #3b82f6;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.empath-calendar .rbc-show-more:hover {
+  text-decoration: underline;
+}
+
+.empath-calendar .rbc-agenda-view table {
+  border-spacing: 0;
+}
+
+.empath-calendar .rbc-agenda-view .rbc-agenda-date-cell,
+.empath-calendar .rbc-agenda-view .rbc-agenda-time-cell {
+  padding: 12px 16px;
+  vertical-align: top;
+}
+
+.empath-calendar .rbc-agenda-view .rbc-agenda-event-cell {
+  padding: 12px 16px;
+}
+
+@media (max-width: 768px) {
+  .empath-calendar .rbc-toolbar {
+    flex-direction: column;
+  }
+  
+  .empath-calendar .rbc-toolbar-label {
+    width: 100%;
+    text-align: center;
+    margin: 8px 0;
+  }
+}

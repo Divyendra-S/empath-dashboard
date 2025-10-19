@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Users, Calendar, LogOut } from "lucide-react";
+import { Home, Users, Calendar, Clock, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useLogout } from "@/lib/hooks/use-auth";
@@ -10,7 +10,8 @@ import { useLogout } from "@/lib/hooks/use-auth";
 const navigation = [
   { name: "Home", href: "/dashboard", icon: Home },
   { name: "Clients", href: "/dashboard/clients", icon: Users },
-  { name: "Sessions", href: "/dashboard/sessions", icon: Calendar },
+  { name: "Calendar", href: "/dashboard/calendar", icon: Calendar },
+  { name: "Sessions", href: "/dashboard/sessions", icon: Clock },
 ];
 
 export function Sidebar() {

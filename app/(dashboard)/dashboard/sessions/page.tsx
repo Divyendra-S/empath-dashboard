@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Plus, Filter } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSessions } from "@/lib/hooks/use-sessions";
 import { SessionCard } from "@/components/sessions/session-card";
 import type { SessionStatus } from "@/lib/types";
@@ -14,6 +14,7 @@ export default function SessionsPage() {
   const [statusFilter, setStatusFilter] = useState<SessionStatus | undefined>(
     undefined
   );
+
   const {
     data: sessions,
     isLoading,
@@ -30,17 +31,17 @@ export default function SessionsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-semibold">Sessions</h1>
-          <p className="text-gray-600">Manage your therapy sessions</p>
+          <p className="text-gray-600">View and manage your therapy sessions</p>
         </div>
         <Button asChild>
-          <Link href="/dashboard/sessions/new">
+          <Link href="/dashboard/calendar?new=true">
             <Plus className="mr-2 h-4 w-4" />
             New Session
           </Link>
         </Button>
       </div>
 
-      {/* Filters */}
+      {/* Status Filters */}
       <Tabs defaultValue="all" onValueChange={handleFilterChange}>
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
@@ -51,7 +52,7 @@ export default function SessionsPage() {
         </TabsList>
       </Tabs>
 
-      {/* Content */}
+      {/* Sessions List */}
       {error ? (
         <div className="text-center py-12">
           <p className="text-red-600">Error: {error.message}</p>
@@ -71,7 +72,7 @@ export default function SessionsPage() {
             Get started by scheduling your first session
           </p>
           <Button asChild>
-            <Link href="/dashboard/sessions/new">
+            <Link href="/dashboard/calendar?new=true">
               <Plus className="mr-2 h-4 w-4" />
               Schedule Session
             </Link>
