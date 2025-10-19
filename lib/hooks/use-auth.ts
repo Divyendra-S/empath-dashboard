@@ -21,7 +21,10 @@ export function useLogout() {
       toast.success("Logged out successfully");
     },
     onError: (error: Error) => {
-      toast.error(error.message);
+      // Ignore NEXT_REDIRECT errors as they are expected for successful redirects
+      if (error.message !== "NEXT_REDIRECT") {
+        toast.error(error.message || "Failed to log out");
+      }
     },
   });
 }

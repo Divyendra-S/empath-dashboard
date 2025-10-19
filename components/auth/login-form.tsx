@@ -17,19 +17,22 @@ export function LoginForm() {
     setIsLoading(true);
 
     const formData = new FormData(event.currentTarget);
-    
+
     try {
       const result = await login(formData);
-      
+
       if (result?.error) {
         toast.error(result.error);
-      } else {
-        toast.success("Logged in successfully");
+        setIsLoading(false);
       }
-    } catch {
-      toast.error("An unexpected error occurred");
-    } finally {
-      setIsLoading(false);
+      // If no error, redirect is happening - don't show toast or set loading false
+    } catch (error) {
+      // Ignore NEXT_REDIRECT errors as they indicate successful redirect
+      if (error instanceof Error && error.message !== "NEXT_REDIRECT") {
+        toast.error("An unexpected error occurred");
+        setIsLoading(false);
+      }
+      // If it's NEXT_REDIRECT, let it through without showing error
     }
   }
 
@@ -52,7 +55,10 @@ export function LoginForm() {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-sm font-medium text-slate-600">
+          <Label
+            htmlFor="password"
+            className="text-sm font-medium text-slate-600"
+          >
             Password
           </Label>
           <Input
@@ -95,7 +101,10 @@ export function LoginForm() {
       </form>
       <div className="rounded-2xl border border-dashed border-[rgba(120,57,238,0.2)] bg-[var(--theme-highlight)]/50 p-4 text-center text-sm text-slate-600">
         Don&apos;t have an account?{" "}
-        <Link href="/signup" className="font-semibold text-[var(--theme-primary-hex)]">
+        <Link
+          href="/signup"
+          className="font-semibold text-[var(--theme-primary-hex)]"
+        >
           Sign up for free
         </Link>
       </div>

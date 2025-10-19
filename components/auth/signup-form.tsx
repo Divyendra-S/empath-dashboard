@@ -44,18 +44,20 @@ export function SignUpForm() {
         // Email confirmation required
         toast.success(result.message);
         setIsLoading(false);
-      } else {
-        // Success - redirecting to dashboard
-        toast.success("Account created successfully! Redirecting...");
-        // Don't set loading to false here as we're redirecting
       }
+      // If no result, redirect is happening - don't show toast or set loading false
     } catch (error) {
-      // Catch any unexpected errors
-      console.error("Signup error:", error);
-      toast.error(
-        error instanceof Error ? error.message : "An unexpected error occurred"
-      );
-      setIsLoading(false);
+      // Ignore NEXT_REDIRECT errors as they indicate successful redirect
+      if (error instanceof Error && error.message !== "NEXT_REDIRECT") {
+        console.error("Signup error:", error);
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred"
+        );
+        setIsLoading(false);
+      }
+      // If it's NEXT_REDIRECT, let it through without showing error
     }
   }
 
@@ -63,7 +65,10 @@ export function SignUpForm() {
     <div className="space-y-8">
       <form onSubmit={onSubmit} className="space-y-5">
         <div className="space-y-2">
-          <Label htmlFor="full_name" className="text-sm font-medium text-slate-600">
+          <Label
+            htmlFor="full_name"
+            className="text-sm font-medium text-slate-600"
+          >
             Full name
           </Label>
           <Input
@@ -93,7 +98,10 @@ export function SignUpForm() {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="password" className="text-sm font-medium text-slate-600">
+          <Label
+            htmlFor="password"
+            className="text-sm font-medium text-slate-600"
+          >
             Password
           </Label>
           <Input
@@ -107,7 +115,10 @@ export function SignUpForm() {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="confirm_password" className="text-sm font-medium text-slate-600">
+          <Label
+            htmlFor="confirm_password"
+            className="text-sm font-medium text-slate-600"
+          >
             Confirm password
           </Label>
           <Input
@@ -134,7 +145,10 @@ export function SignUpForm() {
       </form>
       <div className="rounded-2xl border border-dashed border-[rgba(120,57,238,0.2)] bg-[var(--theme-highlight)]/50 p-4 text-center text-sm text-slate-600">
         Already have an account?{" "}
-        <Link href="/login" className="font-semibold text-[var(--theme-primary-hex)]">
+        <Link
+          href="/login"
+          className="font-semibold text-[var(--theme-primary-hex)]"
+        >
           Log in
         </Link>
       </div>
