@@ -179,8 +179,11 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-blue-200 bg-blue-50/60 p-10 text-center">
-              <Clock className="h-10 w-10 text-blue-500" />
+            <div
+              className="flex flex-col items-center justify-center rounded-2xl border bg-white p-10 text-center"
+              style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+            >
+              <Clock className="h-10 w-10 text-[var(--theme-primary-hex)]" />
               <h3 className="mt-4 text-base font-semibold text-slate-900">
                 No recent sessions yet
               </h3>

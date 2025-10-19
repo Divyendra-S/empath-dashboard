@@ -38,7 +38,7 @@ const accentRgb = toRgbString(hexToRgbTuple(accentHex));
 const tagBgRgb = toRgbString(hexToRgbTuple(tagBgHex));
 
 const panelGradient = `linear-gradient(135deg, ${toRgba(primaryHex, 0.18)} 0%, ${toRgba(primaryHex, 0.06)} 55%, ${toRgba(primaryHex, 0.18)} 100%)`;
-const sidebarGradient = `linear-gradient(180deg, ${toRgba(primaryHex, 0.18)} 0%, ${toRgba(primaryHex, 0.08)} 45%, ${toRgba(primaryHex, 0.03)} 100%)`;
+const sidebarGradient = `linear-gradient(180deg, ${toRgba(primaryHex, 0.08)} 0%, ${toRgba(primaryHex, 0.035)} 45%, ${toRgba(primaryHex, 0.01)} 100%)`;
 const badgeGradient = `linear-gradient(135deg, ${toRgba(primaryHex, 0.16)}, ${toRgba(primaryHex, 0.08)})`;
 const iconGradient = `linear-gradient(135deg, ${toRgba(primaryHex, 0.22)}, ${toRgba(primaryHex, 0.34)})`;
 
