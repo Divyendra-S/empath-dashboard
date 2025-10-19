@@ -61,18 +61,18 @@ export default function DashboardPage() {
       {/* Key Metrics Cards */}
       <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
         <Card
-          className="hover:shadow-md transition-all duration-200"
+          className="hover:shadow-md transition-all duration-200 p-0 gap-0"
           style={{ borderColor: "rgb(240 237 255)" }}
         >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 pt-2.5 px-4">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-2">
             <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-wide">
               Total Clients
             </CardTitle>
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
+            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
               <Users className="h-3.5 w-3.5 text-white" />
             </div>
           </CardHeader>
-          <CardContent className="pb-2.5 px-4">
+          <CardContent className="p-3 pt-0">
             {statsLoading ? (
               <Skeleton className="h-7 w-14" />
             ) : (
@@ -90,15 +90,15 @@ export default function DashboardPage() {
         </Card>
 
         <Card
-          className="hover:shadow-md transition-all duration-200"
+          className="hover:shadow-md transition-all duration-200 p-0 gap-0"
           style={{ borderColor: "rgb(240 237 255)" }}
         >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 pt-2.5 px-4">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-2">
             <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-wide">
               Today
             </CardTitle>
             <div
-              className="h-8 w-8 rounded-xl flex items-center justify-center shadow-sm"
+              className="h-7 w-7 rounded-lg flex items-center justify-center shadow-sm"
               style={{
                 background:
                   "linear-gradient(to bottom right, #7839EE, #9d5eff)",
@@ -107,7 +107,7 @@ export default function DashboardPage() {
               <CalendarIcon className="h-3.5 w-3.5 text-white" />
             </div>
           </CardHeader>
-          <CardContent className="pb-2.5 px-4">
+          <CardContent className="p-3 pt-0">
             {statsLoading ? (
               <Skeleton className="h-7 w-14" />
             ) : (
@@ -122,18 +122,18 @@ export default function DashboardPage() {
         </Card>
 
         <Card
-          className="hover:shadow-md transition-all duration-200"
+          className="hover:shadow-md transition-all duration-200 p-0 gap-0"
           style={{ borderColor: "rgb(240 237 255)" }}
         >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 pt-2.5 px-4">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-2">
             <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-wide">
               This Week
             </CardTitle>
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-fuchsia-500 to-pink-600 flex items-center justify-center shadow-sm">
+            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-fuchsia-500 to-pink-600 flex items-center justify-center shadow-sm">
               <Clock className="h-3.5 w-3.5 text-white" />
             </div>
           </CardHeader>
-          <CardContent className="pb-2.5 px-4">
+          <CardContent className="p-3 pt-0">
             {statsLoading ? (
               <Skeleton className="h-7 w-14" />
             ) : (
@@ -150,18 +150,18 @@ export default function DashboardPage() {
         </Card>
 
         <Card
-          className="hover:shadow-md transition-all duration-200"
+          className="hover:shadow-md transition-all duration-200 p-0 gap-0"
           style={{ borderColor: "rgb(240 237 255)" }}
         >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 pt-2.5 px-4">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 p-3 pb-2">
             <CardTitle className="text-xs font-medium text-gray-600 uppercase tracking-wide">
               Completed
             </CardTitle>
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-sm">
+            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-sm">
               <CheckCircle2 className="h-3.5 w-3.5 text-white" />
             </div>
           </CardHeader>
-          <CardContent className="pb-2.5 px-4">
+          <CardContent className="p-3 pt-0">
             {statsLoading ? (
               <Skeleton className="h-7 w-14" />
             ) : (
@@ -179,9 +179,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Recent Sessions */}
-      <Card style={{ borderColor: "rgb(240 237 255)" }}>
+      <Card className="p-0 gap-0" style={{ borderColor: "rgb(240 237 255)" }}>
         <CardHeader
-          className="pb-3"
+          className="p-4 pb-3"
           style={{ borderBottom: "1px solid rgb(246 244 255)" }}
         >
           <div className="flex items-center justify-between">
@@ -202,7 +202,7 @@ export default function DashboardPage() {
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="pt-4">
+        <CardContent className="p-4">
           {sessionsLoading ? (
             <div className="space-y-3">
               {[...Array(3)].map((_, i) => (
@@ -230,9 +230,9 @@ export default function DashboardPage() {
       </Card>
 
       {/* Upcoming Sessions */}
-      <Card style={{ borderColor: "rgb(240 237 255)" }}>
+      <Card className="p-0 gap-0" style={{ borderColor: "rgb(240 237 255)" }}>
         <CardHeader
-          className="pb-3"
+          className="p-4 pb-3"
           style={{ borderBottom: "1px solid rgb(246 244 255)" }}
         >
           <div className="flex items-center justify-between">
@@ -253,7 +253,7 @@ export default function DashboardPage() {
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="pt-4">
+        <CardContent className="p-4">
           {/* Empty state - will be populated with real data later */}
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <div
