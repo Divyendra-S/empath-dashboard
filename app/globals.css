@@ -44,38 +44,39 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0.5rem;
+  /* Royal Purple Healthcare Theme - #7839EE */
+  --background: 251 251 253; /* #fbfbfd - Very soft off-white */
+  --foreground: 30 27 75; /* #1e1b4b - Deep indigo */
+  --card: 255 255 255; /* #ffffff - Pure white */
+  --card-foreground: 30 27 75;
+  --popover: 255 255 255;
+  --popover-foreground: 30 27 75;
+  --primary: 120 57 238; /* #7839EE - Custom purple */
+  --primary-foreground: 255 255 255;
+  --secondary: 249 248 255; /* #f9f8ff - Very light purple */
+  --secondary-foreground: 30 27 75;
+  --muted: 249 248 255;
+  --muted-foreground: 107 114 128; /* #6b7280 - Gray-500 */
+  --accent: 199 184 255; /* #c7b8ff - Light purple */
+  --accent-foreground: 76 29 149; /* #4c1d95 - Deep purple */
+  --destructive: 239 68 68; /* #ef4444 - Red */
+  --border: 240 237 255; /* #f0edff - Very light purple border */
+  --input: 240 237 255;
+  --ring: 120 57 238;
+  --chart-1: 120 57 238; /* Royal Purple */
+  --chart-2: 147 197 253; /* Sky blue */
+  --chart-3: 167 243 208; /* Mint green */
+  --chart-4: 253 186 116; /* Peach */
+  --chart-5: 251 207 232; /* Pink */
+  --sidebar: 255 255 255; /* White sidebar */
+  --sidebar-foreground: 55 48 107; /* #37306b - Purple-gray */
+  --sidebar-primary: 120 57 238; /* #7839EE for active */
+  --sidebar-primary-foreground: 255 255 255;
+  --sidebar-accent: 246 244 255; /* #f6f4ff - Very light violet */
+  --sidebar-accent-foreground: 76 29 149; /* Deep purple */
+  --sidebar-border: 240 237 255;
+  --sidebar-ring: 120 57 238;
 }
 
 .dark {

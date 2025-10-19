@@ -36,11 +36,14 @@ export function SessionCard({ session }: SessionCardProps) {
 
   return (
     <Link href={`/dashboard/sessions/${session.id}`}>
-      <Card className="hover:shadow-md transition-shadow cursor-pointer">
-        <CardHeader>
+      <Card
+        className="hover:shadow-md transition-shadow cursor-pointer"
+        style={{ borderColor: "rgb(240 237 255)" }}
+      >
+        <CardHeader className="pb-2">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="text-base flex items-center gap-2">
                 <User className="h-4 w-4" />
                 {session.client.full_name}
               </CardTitle>
@@ -54,17 +57,17 @@ export function SessionCard({ session }: SessionCardProps) {
             </Badge>
           </div>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-2 text-sm text-gray-600">
+        <CardContent className="pt-0">
+          <div className="space-y-1.5 text-sm text-gray-600">
             {session.duration_minutes && (
               <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4" />
+                <Clock className="h-3.5 w-3.5" />
                 <span>{session.duration_minutes} minutes</span>
               </div>
             )}
             {session.call_type && (
               <div className="flex items-center gap-2">
-                <Video className="h-4 w-4" />
+                <Video className="h-3.5 w-3.5" />
                 <span className="capitalize">
                   {session.call_type.replace("_", " ")}
                 </span>
