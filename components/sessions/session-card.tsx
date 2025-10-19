@@ -11,10 +11,10 @@ interface SessionCardProps {
 }
 
 const statusColors = {
-  scheduled: "bg-blue-100 text-blue-800",
-  in_progress: "bg-green-100 text-green-800",
-  completed: "bg-gray-100 text-gray-800",
-  cancelled: "bg-red-100 text-red-800",
+  scheduled: "bg-blue-100 text-blue-700 border-blue-200",
+  in_progress: "bg-green-100 text-green-700 border-green-200",
+  completed: "bg-gray-100 text-gray-700 border-gray-200",
+  cancelled: "bg-red-100 text-red-700 border-red-200",
 };
 
 const statusLabels = {
@@ -29,46 +29,45 @@ export function SessionCard({ session }: SessionCardProps) {
 
   return (
     <Link href={`/dashboard/sessions/${session.id}`}>
-      <div className="bg-white rounded-xl p-5 hover:shadow-lg transition-all cursor-pointer border border-gray-200/60 hover:border-gray-300/60 h-full">
+      <div className="bg-white rounded-lg p-5 shadow hover:shadow-md transition-shadow cursor-pointer h-full">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h3 className="text-base font-semibold text-gray-900 flex items-center gap-2 mb-2">
-              <div className="h-8 w-8 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
-                <User className="h-4 w-4 text-purple-600" />
-              </div>
-              {session.client.full_name}
-            </h3>
-            <p className="text-sm text-gray-600 flex items-center gap-2 ml-10">
-              <Calendar className="h-3.5 w-3.5" />
-              {format(scheduledDate, "MMM d, yyyy 'at' h:mm a")}
-            </p>
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+              <User className="h-5 w-5 text-purple-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-semibold text-gray-900 truncate">
+                {session.client.full_name}
+              </h3>
+              <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                <Calendar className="h-3 w-3 flex-shrink-0" />
+                {format(scheduledDate, "MMM d, h:mm a")}
+              </p>
+            </div>
           </div>
-          <Badge className={statusColors[session.status]}>
-            {statusLabels[session.status]}
-          </Badge>
         </div>
-        <div className="space-y-2 text-sm text-gray-600 ml-10">
+
+        <div className="space-y-2 text-sm">
           {session.duration_minutes && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-gray-600">
               <Clock className="h-4 w-4" />
-              <span className="font-medium">
-                {session.duration_minutes} minutes
-              </span>
+              <span>{session.duration_minutes} minutes</span>
             </div>
           )}
           {session.call_type && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-gray-600">
               <Video className="h-4 w-4" />
-              <span className="capitalize font-medium">
+              <span className="capitalize">
                 {session.call_type.replace("_", " ")}
               </span>
             </div>
           )}
-          {session.notes && (
-            <p className="text-gray-500 line-clamp-2 mt-3 ml-0">
-              {session.notes}
-            </p>
-          )}
+        </div>
+
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <Badge className={`${statusColors[session.status]} text-xs border`}>
+            {statusLabels[session.status]}
+          </Badge>
         </div>
       </div>
     </Link>
