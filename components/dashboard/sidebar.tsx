@@ -50,24 +50,11 @@ export function Sidebar() {
         background: themeConfig.gradients.sidebar,
       }}
     >
-      <div className="px-5 pt-6">
-        <div
-          className="flex items-center justify-between rounded-2xl border bg-white/80 px-4 py-3 shadow-sm"
-          style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-        >
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[var(--theme-primary-hex)]/75">
-              Empath
-            </p>
-            <p className="text-lg font-semibold text-slate-900">Care Suite</p>
-          </div>
-          <div
-            className="flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-lg"
-            style={{ background: themeConfig.gradients.icon }}
-          >
-            <Sparkles className="h-5 w-5" />
-          </div>
-        </div>
+      <div
+        className="flex h-[57px] items-center px-5"
+        style={{ borderBottom: "1px solid rgba(120, 57, 238, 0.12)" }}
+      >
+        <p className="text-lg font-semibold text-slate-900">Empath</p>
       </div>
 
       <div className="px-5 pt-6">
