@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   useDashboardStats,
   useRecentSessions,
+  useUpcomingSessions,
 } from "@/lib/hooks/use-dashboard";
 import { SessionCard } from "@/components/sessions/session-card";
 
@@ -22,6 +23,8 @@ export default function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = useDashboardStats();
   const { data: recentSessions, isLoading: sessionsLoading } =
     useRecentSessions();
+  const { data: upcomingSessions, isLoading: upcomingLoading } =
+    useUpcomingSessions();
 
   // Get current date info for welcome message
   const now = new Date();
@@ -124,7 +127,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl bg-white p-6 shadow-sm">
+      <section>
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">Recent Sessions</h2>
@@ -157,8 +160,8 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/60 p-10 text-center">
-              <Clock className="h-10 w-10 text-slate-400" />
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-blue-200 bg-blue-50/60 p-10 text-center">
+              <Clock className="h-10 w-10 text-blue-500" />
               <h3 className="mt-4 text-base font-semibold text-slate-900">
                 No recent sessions yet
               </h3>
@@ -170,7 +173,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl bg-white p-6 shadow-sm">
+      <section>
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">
@@ -192,26 +195,40 @@ export default function DashboardPage() {
           </Button>
         </div>
         <div className="mt-6">
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-purple-200 bg-purple-50/60 p-10 text-center">
-            <CalendarIcon className="h-10 w-10 text-purple-500" />
-            <h3 className="mt-4 text-base font-semibold text-slate-900">
-              No upcoming sessions
-            </h3>
-            <p className="mt-1 text-sm text-slate-500">
-              Schedule your next session to populate this view.
-            </p>
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="mt-5 border-purple-300 bg-white/70 font-medium text-purple-600 hover:bg-purple-100"
-            >
-              <Link href="/dashboard/calendar">
-                <Plus className="mr-2 h-4 w-4" />
-                Add to calendar
-              </Link>
-            </Button>
-          </div>
+          {upcomingLoading ? (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {[...Array(4)].map((_, i) => (
+                <Skeleton key={i} className="h-32" />
+              ))}
+            </div>
+          ) : upcomingSessions && upcomingSessions.length > 0 ? (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {upcomingSessions.map((session) => (
+                <SessionCard key={session.id} session={session} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center rounded-2xl border border-purple-200 bg-purple-50/60 p-10 text-center">
+              <CalendarIcon className="h-10 w-10 text-purple-500" />
+              <h3 className="mt-4 text-base font-semibold text-slate-900">
+                No upcoming sessions
+              </h3>
+              <p className="mt-1 text-sm text-slate-500">
+                Schedule your next session to populate this view.
+              </p>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="mt-5 bg-white/70 font-medium text-purple-600 hover:bg-purple-100"
+              >
+                <Link href="/dashboard/calendar">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add to calendar
+                </Link>
+              </Button>
+            </div>
+          )}
         </div>
       </section>
     </div>
