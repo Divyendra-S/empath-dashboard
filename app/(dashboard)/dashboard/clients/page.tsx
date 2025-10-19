@@ -46,6 +46,7 @@ export default function ClientsPage() {
             <p className="mt-2 text-sm text-slate-600">
               Organize client stories and tailor support with confidence.
             </p>
+            
           </div>
           <div className="flex flex-col items-end gap-3">
             <Button
