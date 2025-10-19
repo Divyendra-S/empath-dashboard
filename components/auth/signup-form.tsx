@@ -5,15 +5,9 @@ import { signUp } from "@/lib/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { toast } from "sonner";
 import Link from "next/link";
+import { themeConfig } from "@/lib/theme";
 
 export function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -66,68 +60,84 @@ export function SignUpForm() {
   }
 
   return (
-    <Card>
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-semibold">
-          Create an account
-        </CardTitle>
-        <CardDescription>Enter your information to get started</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="full_name">Full Name</Label>
-            <Input
-              id="full_name"
-              name="full_name"
-              type="text"
-              placeholder="Dr. John Doe"
-              required
-              disabled={isLoading}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="name@example.com"
-              required
-              disabled={isLoading}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              required
-              disabled={isLoading}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="confirm_password">Confirm Password</Label>
-            <Input
-              id="confirm_password"
-              name="confirm_password"
-              type="password"
-              required
-              disabled={isLoading}
-            />
-          </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Creating account..." : "Sign up"}
-          </Button>
-        </form>
-        <div className="mt-4 text-center text-sm">
-          Already have an account?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline">
-            Log in
-          </Link>
+    <div className="space-y-8">
+      <form onSubmit={onSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <Label htmlFor="full_name" className="text-sm font-medium text-slate-600">
+            Full name
+          </Label>
+          <Input
+            id="full_name"
+            name="full_name"
+            type="text"
+            placeholder="Dr. John Doe"
+            required
+            disabled={isLoading}
+            className="h-12 rounded-2xl border bg-white/85 px-4 text-sm shadow-sm"
+            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+          />
         </div>
-      </CardContent>
-    </Card>
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-sm font-medium text-slate-600">
+            Email
+          </Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="name@example.com"
+            required
+            disabled={isLoading}
+            className="h-12 rounded-2xl border bg-white/85 px-4 text-sm shadow-sm"
+            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password" className="text-sm font-medium text-slate-600">
+            Password
+          </Label>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            required
+            disabled={isLoading}
+            className="h-12 rounded-2xl border bg-white/85 px-4 text-sm shadow-sm"
+            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="confirm_password" className="text-sm font-medium text-slate-600">
+            Confirm password
+          </Label>
+          <Input
+            id="confirm_password"
+            name="confirm_password"
+            type="password"
+            required
+            disabled={isLoading}
+            className="h-12 rounded-2xl border bg-white/85 px-4 text-sm shadow-sm"
+            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+          />
+        </div>
+        <Button
+          type="submit"
+          className="h-12 w-full rounded-2xl text-sm font-semibold text-white shadow-lg"
+          style={{
+            backgroundColor: themeConfig.colors.primary,
+            boxShadow: themeConfig.colors.shadowPrimary,
+          }}
+          disabled={isLoading}
+        >
+          {isLoading ? "Creating account..." : "Sign up"}
+        </Button>
+      </form>
+      <div className="rounded-2xl border border-dashed border-[rgba(120,57,238,0.2)] bg-[var(--theme-highlight)]/50 p-4 text-center text-sm text-slate-600">
+        Already have an account?{" "}
+        <Link href="/login" className="font-semibold text-[var(--theme-primary-hex)]">
+          Log in
+        </Link>
+      </div>
+    </div>
   );
 }

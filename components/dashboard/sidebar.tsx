@@ -112,7 +112,9 @@ export function Sidebar() {
                     : "text-slate-400 group-hover:text-[var(--theme-primary-hex)]"
                 )}
               />
-              <span className={isActive ? "font-semibold" : ""}>{item.name}</span>
+              <span className={isActive ? "font-semibold" : ""}>
+                {item.name}
+              </span>
             </Link>
           );
         })}
@@ -127,7 +129,10 @@ export function Sidebar() {
             <Avatar className="h-10 w-10">
               <AvatarFallback
                 className="rounded-xl text-xs font-semibold text-white"
-                style={{ background: themeConfig.gradients.icon }}
+                style={{
+                  background: `linear-gradient(135deg, ${themeConfig.colors.primary}, ${themeConfig.colors.primaryHover})`,
+                  boxShadow: themeConfig.colors.shadowPrimary,
+                }}
               >
                 {initials}
               </AvatarFallback>

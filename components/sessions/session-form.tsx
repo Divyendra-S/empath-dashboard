@@ -109,27 +109,30 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
-        <section className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <section className="space-y-5">
           <header className="space-y-1">
             <h2 className="text-lg font-semibold text-slate-900">Session overview</h2>
             <p className="text-sm text-slate-500">
               Outline the essentials for this conversation.
             </p>
           </header>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2">
             <FormField
               control={form.control}
               name="client_id"
               render={({ field }) => (
-                <FormItem className="flex flex-col gap-2">
+                <FormItem className="flex flex-col gap-1.5">
                   <FormLabel className="text-sm font-medium text-slate-600">
                     Client
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
-                        style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                        style={{
+                          borderColor: "rgba(120, 57, 238, 0.18)",
+                          backgroundColor: "rgba(255, 255, 255, 0.92)",
+                        }}
                       >
                         <SelectValue placeholder="Select a client" />
                       </SelectTrigger>
@@ -150,7 +153,7 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
               control={form.control}
               name="scheduled_at"
               render={({ field }) => (
-                <FormItem className="flex flex-col gap-2">
+                <FormItem className="flex flex-col gap-1.5">
                   <FormLabel className="text-sm font-medium text-slate-600">
                     Scheduled date & time
                   </FormLabel>
@@ -159,7 +162,10 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
                       type="datetime-local"
                       {...field}
                       className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
-                      style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                      style={{
+                        borderColor: "rgba(120, 57, 238, 0.18)",
+                        backgroundColor: "rgba(255, 255, 255, 0.92)",
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -170,7 +176,7 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
               control={form.control}
               name="duration_minutes"
               render={({ field }) => (
-                <FormItem className="flex flex-col gap-2">
+                <FormItem className="flex flex-col gap-1.5">
                   <FormLabel className="text-sm font-medium text-slate-600">
                     Duration (minutes)
                   </FormLabel>
@@ -180,7 +186,10 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
                       min="1"
                       {...field}
                       className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
-                      style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                      style={{
+                        borderColor: "rgba(120, 57, 238, 0.18)",
+                        backgroundColor: "rgba(255, 255, 255, 0.92)",
+                      }}
                     />
                   </FormControl>
                   <FormDescription className="text-xs text-slate-500">
@@ -193,26 +202,29 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
           </div>
         </section>
 
-        <section className="space-y-6">
+        <section className="space-y-5">
           <header className="space-y-1">
             <h2 className="text-lg font-semibold text-slate-900">Call setup</h2>
             <p className="text-sm text-slate-500">
               Choose how the session will take place.
             </p>
           </header>
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-5 md:grid-cols-2">
             <FormField
               control={form.control}
               name="call_type"
               render={({ field }) => (
-                <FormItem className="flex flex-col gap-2">
+                <FormItem className="flex flex-col gap-1.5">
                   <FormLabel className="text-sm font-medium text-slate-600">
                     Call type
                   </FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
-                        style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                        style={{
+                          borderColor: "rgba(120, 57, 238, 0.18)",
+                          backgroundColor: "rgba(255, 255, 255, 0.92)",
+                        }}
                       >
                         <SelectValue placeholder="Select call type" />
                       </SelectTrigger>
@@ -240,7 +252,7 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
                 control={form.control}
                 name="meeting_url"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col gap-2">
+                  <FormItem className="flex flex-col gap-1.5">
                     <FormLabel className="text-sm font-medium text-slate-600">
                       Meeting URL
                     </FormLabel>
@@ -249,7 +261,10 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
                         placeholder="https://zoom.us/j/..."
                         {...field}
                         className="h-12 rounded-2xl border bg-white/80 px-4 text-sm shadow-sm"
-                        style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                        style={{
+                          borderColor: "rgba(120, 57, 238, 0.18)",
+                          backgroundColor: "rgba(255, 255, 255, 0.92)",
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -260,7 +275,7 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
           </div>
         </section>
 
-        <section className="space-y-6">
+        <section className="space-y-5">
           <header className="space-y-1">
             <h2 className="text-lg font-semibold text-slate-900">Notes</h2>
             <p className="text-sm text-slate-500">
@@ -271,7 +286,7 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
             control={form.control}
             name="notes"
             render={({ field }) => (
-              <FormItem className="flex flex-col gap-2">
+              <FormItem className="flex flex-col gap-1.5">
                 <FormLabel className="text-sm font-medium text-slate-600">
                   Session notes
                 </FormLabel>
@@ -279,7 +294,10 @@ export function SessionForm({ session, defaultClientId, defaultScheduledAt, onSu
                   <Textarea
                     placeholder="Add any notes about this session..."
                     className="min-h-[140px] resize-none rounded-2xl border bg-white/80 px-4 py-3 text-sm shadow-sm"
-                    style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                    style={{
+                      borderColor: "rgba(120, 57, 238, 0.18)",
+                      backgroundColor: "rgba(255, 255, 255, 0.92)",
+                    }}
                     rows={4}
                     {...field}
                   />
