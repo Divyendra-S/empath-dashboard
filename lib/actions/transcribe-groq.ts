@@ -6,6 +6,13 @@ import fs from "fs";
 import path from "path";
 import { tmpdir } from "os";
 
+// Groq Whisper response with verbose_json format
+interface VerboseTranscription {
+  text: string;
+  duration?: number;
+  language?: string;
+}
+
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY!,
 });
@@ -42,13 +49,13 @@ export async function transcribeAudio(recordingId: string) {
     fs.writeFileSync(tempFilePath, Buffer.from(buffer));
 
     // Transcribe with Groq Whisper
-    const transcription = await groq.audio.transcriptions.create({
+    const transcription = (await groq.audio.transcriptions.create({
       file: fs.createReadStream(tempFilePath),
       model: "whisper-large-v3",
       response_format: "verbose_json",
       language: "en",
       temperature: 0.0,
-    });
+    })) as VerboseTranscription;
 
     // Clean up temp file
     fs.unlinkSync(tempFilePath);
