@@ -1,0 +1,20 @@
+# Documentation files
+*.md
+!README.md
+
+# Test files
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Debug files
+debug-*.js
+test-*.js
+test-*.md
+test-*.sh
+
+# Build artifacts
+.next/
+node_modules/
+

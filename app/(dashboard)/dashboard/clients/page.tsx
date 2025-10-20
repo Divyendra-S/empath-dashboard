@@ -19,7 +19,7 @@ export default function ClientsPage() {
         className="relative overflow-hidden rounded-3xl border p-6 shadow-sm"
         style={{
           borderColor: "rgba(120, 57, 238, 0.18)",
-          background: themeConfig.gradients.panel,
+          background: themeConfig.gradients.panel, 
         }}
       >
         <div

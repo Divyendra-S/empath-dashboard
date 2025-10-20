@@ -2,9 +2,13 @@
 
 import Groq from "groq-sdk";
 import { createClient } from "@/lib/supabase/server";
-import fs from "fs";
+import fs from "fs/promises";
+import fsSync from "fs";
 import path from "path";
 import { tmpdir } from "os";
+
+// Ensure this runs in Node.js runtime
+export const runtime = "nodejs";
 
 // Groq Whisper response with verbose_json format
 interface VerboseTranscription {
@@ -46,11 +50,11 @@ export async function transcribeAudio(recordingId: string) {
     // Save to temp file
     const tempFilePath = path.join(tmpdir(), `audio-${recordingId}.mp4`);
     const buffer = await audioData.arrayBuffer();
-    fs.writeFileSync(tempFilePath, Buffer.from(buffer));
+    await fs.writeFile(tempFilePath, Buffer.from(buffer));
 
     // Transcribe with Groq Whisper
     const transcription = (await groq.audio.transcriptions.create({
-      file: fs.createReadStream(tempFilePath),
+      file: fsSync.createReadStream(tempFilePath),
       model: "whisper-large-v3",
       response_format: "verbose_json",
       language: "en",
@@ -58,7 +62,7 @@ export async function transcribeAudio(recordingId: string) {
     })) as VerboseTranscription;
 
     // Clean up temp file
-    fs.unlinkSync(tempFilePath);
+    await fs.unlink(tempFilePath);
 
     // Update recording with transcript
     const { error: updateError } = await supabase
