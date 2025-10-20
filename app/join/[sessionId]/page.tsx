@@ -27,7 +27,7 @@ export default function JoinSessionPage({
 
         const data = await response.json();
         setRoomUrl(data.roomUrl);
-      } catch (err) {
+      } catch {
         setError("Session not found or not available");
       } finally {
         setLoading(false);

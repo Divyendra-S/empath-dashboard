@@ -39,7 +39,7 @@ export function TranscriptViewer({
       onUpdate?.(editedTranscript);
       setIsEditing(false);
       toast.success("Transcript updated");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update transcript");
     }
   };

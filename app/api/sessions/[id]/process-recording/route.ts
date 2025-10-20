@@ -7,7 +7,8 @@ export async function POST(
 ) {
   try {
     const { id: sessionId } = await params;
-    const { recordingId } = await req.json();
+    const { instanceId, recordingId } = await req.json();
+    const recordingIdToUse = instanceId || recordingId;
 
     const supabase = await createClient();
     const {
@@ -20,7 +21,7 @@ export async function POST(
 
     // Get Daily.co recording download URL
     const response = await fetch(
-      `https://api.daily.co/v1/recordings/${recordingId}`,
+      `https://api.daily.co/v1/recordings/${recordingIdToUse}`,
       {
         headers: {
           Authorization: `Bearer ${process.env.DAILY_API_KEY}`,

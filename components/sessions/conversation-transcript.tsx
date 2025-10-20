@@ -70,7 +70,6 @@ function parseTranscript(transcript: string): Message[] {
 export function ConversationTranscript({
   transcript,
   recordingId,
-  clientName,
   onUpdate,
 }: ConversationTranscriptProps) {
   const [isEditing, setIsEditing] = useState(false);
@@ -96,7 +95,7 @@ export function ConversationTranscript({
       onUpdate?.();
       setIsEditing(false);
       toast.success("Transcript updated");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update transcript");
     }
   };

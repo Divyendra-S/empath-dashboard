@@ -49,16 +49,32 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
     setError(null);
 
     audio.addEventListener("loadedmetadata", () => {
-      console.log("Metadata loaded, duration:", audio.duration, "seekable:", audio.seekable.length);
-      if (isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
+      console.log(
+        "Metadata loaded, duration:",
+        audio.duration,
+        "seekable:",
+        audio.seekable.length
+      );
+      if (
+        isFinite(audio.duration) &&
+        audio.duration > 0 &&
+        audio.duration !== Infinity
+      ) {
         console.log("Setting duration from loadedmetadata:", audio.duration);
         setDuration(audio.duration);
         setIsLoading(false);
       } else if (audio.seekable.length > 0) {
         try {
           const seekableEnd = audio.seekable.end(audio.seekable.length - 1);
-          if (isFinite(seekableEnd) && seekableEnd > 0 && seekableEnd !== Infinity) {
-            console.log("Setting duration from seekable in loadedmetadata:", seekableEnd);
+          if (
+            isFinite(seekableEnd) &&
+            seekableEnd > 0 &&
+            seekableEnd !== Infinity
+          ) {
+            console.log(
+              "Setting duration from seekable in loadedmetadata:",
+              seekableEnd
+            );
             setDuration(seekableEnd);
             setIsLoading(false);
           }
@@ -67,22 +83,35 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
         }
       } else {
         // WebM files might not have duration in metadata, wait for other events
-        console.log("Duration not available in metadata, will try other events");
+        console.log(
+          "Duration not available in metadata, will try other events"
+        );
       }
     });
 
     // Handle duration change (important for WebM files)
     audio.addEventListener("durationchange", () => {
       console.log("Duration changed event, duration:", audio.duration);
-      if (isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
+      if (
+        isFinite(audio.duration) &&
+        audio.duration > 0 &&
+        audio.duration !== Infinity
+      ) {
         console.log("Setting duration from durationchange:", audio.duration);
         setDuration(audio.duration);
         setIsLoading(false);
       } else if (audio.seekable.length > 0) {
         try {
           const seekableEnd = audio.seekable.end(audio.seekable.length - 1);
-          if (isFinite(seekableEnd) && seekableEnd > 0 && seekableEnd !== Infinity) {
-            console.log("Setting duration from seekable in durationchange:", seekableEnd);
+          if (
+            isFinite(seekableEnd) &&
+            seekableEnd > 0 &&
+            seekableEnd !== Infinity
+          ) {
+            console.log(
+              "Setting duration from seekable in durationchange:",
+              seekableEnd
+            );
             setDuration(seekableEnd);
             setIsLoading(false);
           }
@@ -97,9 +126,13 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
       if (isFinite(audio.currentTime)) {
         setCurrentTime(audio.currentTime);
       }
-      
+
       // Continuously try to get duration for WebM files (but only log once)
-      if (isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
+      if (
+        isFinite(audio.duration) &&
+        audio.duration > 0 &&
+        audio.duration !== Infinity
+      ) {
         if (!durationSet) {
           console.log("Setting duration from timeupdate:", audio.duration);
           durationSet = true;
@@ -108,14 +141,21 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
       } else if (audio.seekable.length > 0) {
         try {
           const seekableEnd = audio.seekable.end(audio.seekable.length - 1);
-          if (isFinite(seekableEnd) && seekableEnd > 0 && seekableEnd !== Infinity) {
+          if (
+            isFinite(seekableEnd) &&
+            seekableEnd > 0 &&
+            seekableEnd !== Infinity
+          ) {
             if (!durationSet) {
-              console.log("Setting duration from seekable in timeupdate:", seekableEnd);
+              console.log(
+                "Setting duration from seekable in timeupdate:",
+                seekableEnd
+              );
               durationSet = true;
             }
             setDuration(seekableEnd);
           }
-        } catch (e) {
+        } catch {
           // Ignore errors
         }
       }
@@ -128,12 +168,12 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
 
     let hasCanPlay = false;
     let hasLoadStart = false;
-    
+
     audio.addEventListener("loadstart", () => {
       hasLoadStart = true;
       console.log("Audio load started");
     });
-    
+
     const errorHandler = () => {
       // WebM files often fire false error events - be very aggressive about ignoring them
       setTimeout(() => {
@@ -142,53 +182,54 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
           console.log("Error event suppressed - audio already can play");
           return;
         }
-        
+
         // If loading has started, likely a false error
         if (hasLoadStart) {
           console.log("Error event suppressed - audio is loading");
           return;
         }
-        
+
         // Check if audio is actually loading or can play
-        const isLoading = audio.networkState === audio.NETWORK_LOADING || 
-                         audio.networkState === audio.NETWORK_IDLE;
+        const isLoading =
+          audio.networkState === audio.NETWORK_LOADING ||
+          audio.networkState === audio.NETWORK_IDLE;
         const hasData = audio.readyState >= audio.HAVE_CURRENT_DATA;
         const hasMetadata = audio.readyState >= audio.HAVE_METADATA;
-        
+
         // If audio has any data or is loading, ignore the error
         if (isLoading || hasData || hasMetadata) {
           console.log("Error event suppressed - audio is loading/ready", {
             networkState: audio.networkState,
-            readyState: audio.readyState
+            readyState: audio.readyState,
           });
           return;
         }
-        
+
         const audioError = audio.error;
-        
+
         // No error object means false alarm
         if (!audioError) {
           console.log("Error event suppressed - no actual error object");
           return;
         }
-        
+
         // Even with error object, if we have buffered data, ignore it
         if (audio.buffered.length > 0) {
           console.log("Error event suppressed - audio has buffered data");
           return;
         }
-        
+
         // Only show error if it's a real blocking error after multiple checks
         console.error("Real audio error detected:", {
           code: audioError.code,
           message: audioError.message,
           readyState: audio.readyState,
           networkState: audio.networkState,
-          url: fileUrl
+          url: fileUrl,
         });
-        
+
         let errorMessage = "Failed to load audio";
-        
+
         switch (audioError.code) {
           case audioError.MEDIA_ERR_ABORTED:
             errorMessage = "Audio loading was aborted";
@@ -203,32 +244,47 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
             errorMessage = "Audio format not supported by your browser";
             break;
           default:
-            errorMessage = `Audio error: ${audioError.message || "Unknown error"}`;
+            errorMessage = `Audio error: ${
+              audioError.message || "Unknown error"
+            }`;
         }
-        
+
         setError(errorMessage);
         setIsLoading(false);
       }, 1000); // Long timeout to give WebM files time to initialize
     };
-    
+
     audio.addEventListener("error", errorHandler);
 
     audio.addEventListener("canplay", () => {
-      console.log("Audio can play, duration:", audio.duration, "seekable:", audio.seekable.length);
+      console.log(
+        "Audio can play, duration:",
+        audio.duration,
+        "seekable:",
+        audio.seekable.length
+      );
       hasCanPlay = true; // Mark that audio can play
       setCanPlay(true);
       setIsLoading(false);
       setError(null);
-      
+
       // Aggressively try to get duration from all sources
-      if (isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
+      if (
+        isFinite(audio.duration) &&
+        audio.duration > 0 &&
+        audio.duration !== Infinity
+      ) {
         console.log("Setting duration from audio.duration:", audio.duration);
         setDuration(audio.duration);
       } else if (audio.seekable.length > 0) {
         try {
           const seekableEnd = audio.seekable.end(audio.seekable.length - 1);
           console.log("Seekable end:", seekableEnd);
-          if (isFinite(seekableEnd) && seekableEnd > 0 && seekableEnd !== Infinity) {
+          if (
+            isFinite(seekableEnd) &&
+            seekableEnd > 0 &&
+            seekableEnd !== Infinity
+          ) {
             console.log("Setting duration from seekable:", seekableEnd);
             setDuration(seekableEnd);
           }
@@ -236,18 +292,18 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
           console.log("Error reading seekable:", e);
         }
       }
-      
+
       // Start polling for duration if not yet available
       if (durationCheckIntervalRef.current) {
         clearInterval(durationCheckIntervalRef.current);
       }
-      
+
       let pollCount = 0;
       const maxPolls = 50; // Stop after 10 seconds (50 * 200ms)
-      
+
       durationCheckIntervalRef.current = setInterval(() => {
         pollCount++;
-        
+
         if (pollCount > maxPolls) {
           console.log("Polling: Max attempts reached, stopping");
           if (durationCheckIntervalRef.current) {
@@ -256,9 +312,16 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
           }
           return;
         }
-        
-        if (isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
-          console.log("Polling: Found duration from audio.duration:", audio.duration);
+
+        if (
+          isFinite(audio.duration) &&
+          audio.duration > 0 &&
+          audio.duration !== Infinity
+        ) {
+          console.log(
+            "Polling: Found duration from audio.duration:",
+            audio.duration
+          );
           setDuration(audio.duration);
           if (durationCheckIntervalRef.current) {
             clearInterval(durationCheckIntervalRef.current);
@@ -267,15 +330,22 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
         } else if (audio.seekable.length > 0) {
           try {
             const seekableEnd = audio.seekable.end(audio.seekable.length - 1);
-            if (isFinite(seekableEnd) && seekableEnd > 0 && seekableEnd !== Infinity) {
-              console.log("Polling: Found duration from seekable:", seekableEnd);
+            if (
+              isFinite(seekableEnd) &&
+              seekableEnd > 0 &&
+              seekableEnd !== Infinity
+            ) {
+              console.log(
+                "Polling: Found duration from seekable:",
+                seekableEnd
+              );
               setDuration(seekableEnd);
               if (durationCheckIntervalRef.current) {
                 clearInterval(durationCheckIntervalRef.current);
                 durationCheckIntervalRef.current = null;
               }
             }
-          } catch (e) {
+          } catch {
             // Ignore errors during polling
           }
         }
@@ -283,15 +353,31 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
     });
 
     audio.addEventListener("loadeddata", () => {
-      console.log("Audio data loaded, duration:", audio.duration, "seekable:", audio.seekable.length);
-      if (isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
+      console.log(
+        "Audio data loaded, duration:",
+        audio.duration,
+        "seekable:",
+        audio.seekable.length
+      );
+      if (
+        isFinite(audio.duration) &&
+        audio.duration > 0 &&
+        audio.duration !== Infinity
+      ) {
         console.log("Setting duration from loadeddata:", audio.duration);
         setDuration(audio.duration);
       } else if (audio.seekable.length > 0) {
         try {
           const seekableEnd = audio.seekable.end(audio.seekable.length - 1);
-          if (isFinite(seekableEnd) && seekableEnd > 0 && seekableEnd !== Infinity) {
-            console.log("Setting duration from seekable in loadeddata:", seekableEnd);
+          if (
+            isFinite(seekableEnd) &&
+            seekableEnd > 0 &&
+            seekableEnd !== Infinity
+          ) {
+            console.log(
+              "Setting duration from seekable in loadeddata:",
+              seekableEnd
+            );
             setDuration(seekableEnd);
           }
         } catch (e) {
@@ -304,20 +390,31 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
     audio.addEventListener("progress", () => {
       // Try to get duration during buffering (important for WebM)
       if (progressDurationSet) return;
-      
-      if (isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
+
+      if (
+        isFinite(audio.duration) &&
+        audio.duration > 0 &&
+        audio.duration !== Infinity
+      ) {
         console.log("Setting duration from progress event:", audio.duration);
         setDuration(audio.duration);
         progressDurationSet = true;
       } else if (audio.seekable.length > 0) {
         try {
           const seekableEnd = audio.seekable.end(audio.seekable.length - 1);
-          if (isFinite(seekableEnd) && seekableEnd > 0 && seekableEnd !== Infinity) {
-            console.log("Setting duration from seekable in progress:", seekableEnd);
+          if (
+            isFinite(seekableEnd) &&
+            seekableEnd > 0 &&
+            seekableEnd !== Infinity
+          ) {
+            console.log(
+              "Setting duration from seekable in progress:",
+              seekableEnd
+            );
             setDuration(seekableEnd);
             progressDurationSet = true;
           }
-        } catch (e) {
+        } catch {
           // Ignore seekable errors during progress
         }
       }
@@ -327,16 +424,27 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
       setError(null);
       setIsLoading(false);
       setCanPlay(true);
-      
+
       // Final attempt to get duration when playing
-      if (isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
+      if (
+        isFinite(audio.duration) &&
+        audio.duration > 0 &&
+        audio.duration !== Infinity
+      ) {
         console.log("Setting duration while playing:", audio.duration);
         setDuration(audio.duration);
       } else if (audio.seekable.length > 0) {
         try {
           const seekableEnd = audio.seekable.end(audio.seekable.length - 1);
-          if (isFinite(seekableEnd) && seekableEnd > 0 && seekableEnd !== Infinity) {
-            console.log("Setting duration from seekable while playing:", seekableEnd);
+          if (
+            isFinite(seekableEnd) &&
+            seekableEnd > 0 &&
+            seekableEnd !== Infinity
+          ) {
+            console.log(
+              "Setting duration from seekable while playing:",
+              seekableEnd
+            );
             setDuration(seekableEnd);
           }
         } catch (e) {
@@ -355,7 +463,7 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
         clearInterval(durationCheckIntervalRef.current);
         durationCheckIntervalRef.current = null;
       }
-      
+
       audio.pause();
       audio.src = "";
       audio.load();
@@ -383,11 +491,16 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
 
   const handleSeek = (value: number[]) => {
     if (!audioRef.current || !isFinite(value[0])) return;
-    
+
     const seekTime = value[0];
-    const maxTime = duration > 0 ? duration : (audioRef.current.seekable.length > 0 ? audioRef.current.seekable.end(0) : 100);
+    const maxTime =
+      duration > 0
+        ? duration
+        : audioRef.current.seekable.length > 0
+        ? audioRef.current.seekable.end(0)
+        : 100;
     const clampedTime = Math.max(0, Math.min(seekTime, maxTime));
-    
+
     console.log("Seeking to:", clampedTime, "from duration:", duration);
     audioRef.current.currentTime = clampedTime;
     setCurrentTime(clampedTime);
@@ -462,13 +575,13 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
             <p className="text-sm text-rose-600">{error}</p>
           </div>
         )}
-        
+
         {isLoading && !error && (
           <div className="rounded-xl bg-purple-50 p-4 text-center">
             <p className="text-sm text-purple-600">Loading audio...</p>
           </div>
         )}
-        
+
         {/* Progress Bar */}
         <div className="space-y-2">
           <Slider
@@ -540,7 +653,9 @@ export function AudioPlayer({ fileUrl, fileName }: AudioPlayerProps) {
                 key={rate}
                 variant={playbackRate === rate ? "default" : "outline"}
                 size="sm"
-                className={`rounded-lg text-xs ${playbackRate === rate ? "text-white" : ""}`}
+                className={`rounded-lg text-xs ${
+                  playbackRate === rate ? "text-white" : ""
+                }`}
                 onClick={() => handlePlaybackRateChange(rate)}
               >
                 {rate}x

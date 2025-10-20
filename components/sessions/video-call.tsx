@@ -7,7 +7,6 @@ import {
   DailyProvider,
   useParticipantIds,
   useVideoTrack,
-  useAudioTrack,
 } from "@daily-co/daily-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,7 +30,6 @@ interface VideoCallProps {
 
 function VideoTile({ sessionId }: { sessionId: string }) {
   const videoState = useVideoTrack(sessionId);
-  const audioState = useAudioTrack(sessionId);
 
   return (
     <div className="relative w-full h-full bg-slate-900 rounded-xl overflow-hidden">
@@ -145,7 +143,7 @@ function VideoCallContent({
       await fetch(`/api/sessions/${sessionId}/process-recording`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ recordingId: event.recordingId }),
+        body: JSON.stringify({ instanceId: event.instanceId }),
       });
     });
 

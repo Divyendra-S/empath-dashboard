@@ -151,46 +151,46 @@ export function SessionSummary({
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              h1: ({ node, ...props }) => (
+              h1: ({ ...props }) => (
                 <h1
                   className="text-xl font-bold text-purple-900 mt-4 mb-2"
                   {...props}
                 />
               ),
-              h2: ({ node, ...props }) => (
+              h2: ({ ...props }) => (
                 <h2
                   className="text-lg font-bold text-purple-800 mt-3 mb-2"
                   {...props}
                 />
               ),
-              h3: ({ node, ...props }) => (
+              h3: ({ ...props }) => (
                 <h3
                   className="text-base font-semibold text-purple-700 mt-2 mb-1"
                   {...props}
                 />
               ),
-              p: ({ node, ...props }) => (
+              p: ({ ...props }) => (
                 <p className="mb-3 text-slate-700 leading-relaxed" {...props} />
               ),
-              ul: ({ node, ...props }) => (
+              ul: ({ ...props }) => (
                 <ul
                   className="list-disc list-inside mb-3 space-y-1"
                   {...props}
                 />
               ),
-              ol: ({ node, ...props }) => (
+              ol: ({ ...props }) => (
                 <ol
                   className="list-decimal list-inside mb-3 space-y-1"
                   {...props}
                 />
               ),
-              li: ({ node, ...props }) => (
+              li: ({ ...props }) => (
                 <li className="text-slate-700" {...props} />
               ),
-              strong: ({ node, ...props }) => (
+              strong: ({ ...props }) => (
                 <strong className="font-semibold text-purple-900" {...props} />
               ),
-              em: ({ node, ...props }) => (
+              em: ({ ...props }) => (
                 <em className="italic text-slate-600" {...props} />
               ),
             }}
