@@ -89,6 +89,40 @@ export default function SessionDetailPage({
     }
   }, [session?.recordings?.[0]?.id]);
 
+  // Auto-refresh when transcript or summary is processing
+  useEffect(() => {
+    const hasProcessingTranscript = session?.recordings?.some(
+      (r) => r.transcript_status === "processing"
+    );
+    const hasProcessingSummary = session?.recordings?.some(
+      (r) => r.summary_status === "processing"
+    );
+    const isCompletedWithoutRecording =
+      (session?.status === "completed" || session?.status === "cancelled") &&
+      (!session?.recordings || session.recordings.length === 0);
+
+    // Poll if:
+    // 1. Transcript is being processed
+    // 2. Summary is being processed
+    // 3. Session is completed but no recording yet (might still be uploading)
+    if (
+      hasProcessingTranscript ||
+      hasProcessingSummary ||
+      isCompletedWithoutRecording
+    ) {
+      console.log("Starting auto-refresh for processing status...");
+      const interval = setInterval(() => {
+        console.log("Auto-refreshing session data...");
+        refetch();
+      }, 3000); // Check every 3 seconds
+
+      return () => {
+        console.log("Stopping auto-refresh");
+        clearInterval(interval);
+      };
+    }
+  }, [session?.recordings, session?.status, refetch]);
+
   const handleStatusChange = async (status: SessionStatus) => {
     await updateStatus.mutateAsync({ id, status });
     await refetch();
@@ -298,51 +332,51 @@ export default function SessionDetailPage({
               <div className="md:col-span-2 space-y-6">
                 {/* Client Join Link */}
                 {showVideoCall && (
-                <Card
-                  className="rounded-3xl border shadow-sm bg-gradient-to-br from-purple-50 to-pink-50"
-                  style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-                >
-                  <CardHeader>
-                    <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                      <User className="h-5 w-5 text-purple-500" />
-                      Client Join Link
-                    </CardTitle>
-                    <p className="text-sm text-slate-500">
-                      Share this link with your client to join the session
-                    </p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1 rounded-xl border border-purple-200 bg-white px-4 py-3">
-                        <code className="text-sm text-slate-700 break-all">
-                          {`${
-                            typeof window !== "undefined"
-                              ? window.location.origin
-                              : ""
-                          }/join/${id}`}
-                        </code>
+                  <Card
+                    className="rounded-3xl border shadow-sm bg-gradient-to-br from-purple-50 to-pink-50"
+                    style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                  >
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                        <User className="h-5 w-5 text-purple-500" />
+                        Client Join Link
+                      </CardTitle>
+                      <p className="text-sm text-slate-500">
+                        Share this link with your client to join the session
+                      </p>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 rounded-xl border border-purple-200 bg-white px-4 py-3">
+                          <code className="text-sm text-slate-700 break-all">
+                            {`${
+                              typeof window !== "undefined"
+                                ? window.location.origin
+                                : ""
+                            }/join/${id}`}
+                          </code>
+                        </div>
+                        <Button
+                          onClick={copyClientLink}
+                          variant="outline"
+                          className="rounded-xl"
+                        >
+                          {copied ? (
+                            <>
+                              <Check className="h-4 w-4 mr-2 text-green-600" />
+                              Copied!
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="h-4 w-4 mr-2" />
+                              Copy
+                            </>
+                          )}
+                        </Button>
                       </div>
-                      <Button
-                        onClick={copyClientLink}
-                        variant="outline"
-                        className="rounded-xl"
-                      >
-                        {copied ? (
-                          <>
-                            <Check className="h-4 w-4 mr-2 text-green-600" />
-                            Copied!
-                          </>
-                        ) : (
-                          <>
-                            <Copy className="h-4 w-4 mr-2" />
-                            Copy
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                    </CardContent>
+                  </Card>
+                )}
 
                 {/* Video Call UI */}
                 {showVideoCall && roomUrl && (
@@ -475,7 +509,8 @@ export default function SessionDetailPage({
           )}
 
           {/* Completed/Cancelled - Show recordings with transcript left, audio right */}
-          {(session.status === "completed" || session.status === "cancelled") && (
+          {(session.status === "completed" ||
+            session.status === "cancelled") && (
             <>
               {session.recordings && session.recordings.length > 0 ? (
                 <div className="grid gap-6 lg:grid-cols-3">
@@ -488,7 +523,8 @@ export default function SessionDetailPage({
                         clientName={session.client.full_name}
                         onUpdate={() => refetch()}
                       />
-                    ) : session.recordings[0].transcript_status === "processing" ? (
+                    ) : session.recordings[0].transcript_status ===
+                      "processing" ? (
                       <Card
                         className="rounded-3xl border shadow-sm"
                         style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}

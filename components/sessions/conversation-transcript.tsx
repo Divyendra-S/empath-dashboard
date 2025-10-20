@@ -25,19 +25,44 @@ function parseTranscript(transcript: string): Message[] {
   const messages: Message[] = [];
 
   for (const line of lines) {
-    // Skip header lines like "Here is the formatted transcript:"
+    const trimmedLine = line.trim();
+
+    // Skip empty lines
+    if (!trimmedLine) continue;
+
+    // Skip common LLM-added header/footer phrases and explanatory text
     if (
-      line.toLowerCase().includes("here is the formatted transcript") ||
-      line.toLowerCase().includes("formatted transcript:")
+      trimmedLine.toLowerCase().includes("here is the formatted transcript") ||
+      trimmedLine.toLowerCase().includes("formatted transcript:") ||
+      trimmedLine.toLowerCase().includes("here is the conversation") ||
+      trimmedLine.toLowerCase().includes("output:") ||
+      trimmedLine.toLowerCase().startsWith("note:") ||
+      trimmedLine.toLowerCase().startsWith("please note") ||
+      trimmedLine.toLowerCase().includes("upon closer inspection") ||
+      trimmedLine.toLowerCase().includes("let's reevaluate") ||
+      trimmedLine.toLowerCase().includes("a more plausible") ||
+      trimmedLine.toLowerCase().includes("a more accurate") ||
+      trimmedLine.toLowerCase().includes("here is the final version") ||
+      trimmedLine.toLowerCase().includes("final version:") ||
+      trimmedLine.toLowerCase().includes("corrected version:") ||
+      /^[*#-]+$/.test(trimmedLine) // Skip separator lines
     ) {
       continue;
     }
 
     // Check if line contains a speaker label (Name: text)
-    const match = line.match(/^([^:]+):\s*(.+)$/);
+    const match = trimmedLine.match(/^([^:]+):\s*(.+)$/);
     if (match) {
       const [, speaker, text] = match;
       const speakerName = speaker.trim();
+
+      // Skip if this looks like a label or instruction rather than actual speech
+      if (
+        speakerName.toLowerCase().includes("this is unlikely") ||
+        text.toLowerCase().includes("this is unlikely")
+      ) {
+        continue;
+      }
 
       // Determine if this is likely the therapist
       // Therapist names often contain numbers or are emails
@@ -49,17 +74,14 @@ function parseTranscript(transcript: string): Message[] {
         isTherapist,
       });
     } else {
-      // If no speaker found, add as plain text message
-      if (messages.length > 0) {
-        // Append to last message
-        messages[messages.length - 1].text += " " + line.trim();
-      } else {
-        // Create unknown speaker message
-        messages.push({
-          speaker: "Unknown",
-          text: line.trim(),
-          isTherapist: false,
-        });
+      // If no speaker found, skip lines that don't look like conversation
+      // (This prevents adding non-conversation text)
+      if (
+        messages.length > 0 &&
+        !trimmedLine.toLowerCase().includes("version")
+      ) {
+        // Append to last message only if it looks like a continuation
+        messages[messages.length - 1].text += " " + trimmedLine;
       }
     }
   }
