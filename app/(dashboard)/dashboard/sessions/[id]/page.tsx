@@ -64,13 +64,25 @@ export default function SessionDetailPage({
   useEffect(() => {
     if (session?.recordings?.[0]?.id) {
       fetch(`/api/recordings/${session.recordings[0].id}/audio-url`)
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`Failed to fetch audio URL: ${res.status}`);
+          }
+          return res.json();
+        })
         .then((data) => {
           if (data.url) {
+            console.log("Audio URL fetched successfully:", data.url);
             setAudioUrl(data.url);
+          } else if (data.error) {
+            console.error("Audio URL error:", data.error);
+            toast.error(`Failed to load audio: ${data.error}`);
           }
         })
-        .catch((err) => console.error("Failed to fetch audio URL:", err));
+        .catch((err) => {
+          console.error("Failed to fetch audio URL:", err);
+          toast.error("Failed to load audio recording");
+        });
     }
   }, [session?.recordings?.[0]?.id]);
 
