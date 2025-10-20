@@ -3,35 +3,43 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { clientSchema, type ClientFormData } from "@/lib/validations/client";
-import { useCreateClient, useUpdateClient } from "@/lib/hooks/use-clients";
+import { useCreateClient } from "@/lib/hooks/use-clients";
 import { checkEmailUniqueness } from "@/lib/actions/clients";
+import { themeConfig } from "@/lib/theme";
 
-interface ClientFormProps {
-  client?: ClientFormData & { id: string };
-  mode: "create" | "edit";
+interface AddClientModalProps {
+  variant?: "default" | "ghost";
+  className?: string;
 }
 
-export function ClientForm({ client, mode }: ClientFormProps) {
-  const router = useRouter();
-  const createClient = useCreateClient();
-  const updateClient = useUpdateClient();
+export function AddClientModal({ variant = "default", className }: AddClientModalProps) {
+  const [open, setOpen] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const createClient = useCreateClient();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
     setError,
   } = useForm<ClientFormData>({
     resolver: zodResolver(clientSchema),
-    defaultValues: client || {
+    defaultValues: {
       full_name: "",
       email: "",
       phone: "",
@@ -43,8 +51,8 @@ export function ClientForm({ client, mode }: ClientFormProps) {
   const onSubmit = async (data: ClientFormData) => {
     setEmailError(null);
 
-    // Check email uniqueness (exclude current client if editing)
-    const isUnique = await checkEmailUniqueness(data.email, client?.id);
+    // Check email uniqueness
+    const isUnique = await checkEmailUniqueness(data.email);
     if (!isUnique) {
       setError("email", {
         type: "manual",
@@ -54,38 +62,53 @@ export function ClientForm({ client, mode }: ClientFormProps) {
       return;
     }
 
-    if (mode === "create") {
-      createClient.mutate(data, {
-        onSuccess: () => {
-          router.push("/dashboard/clients");
-        },
-      });
-    } else if (client?.id) {
-      updateClient.mutate(
-        { id: client.id, data },
-        {
-          onSuccess: () => {
-            router.push(`/dashboard/clients/${client.id}`);
-          },
-        }
-      );
+    createClient.mutate(data, {
+      onSuccess: () => {
+        reset();
+        setOpen(false);
+      },
+    });
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      reset();
+      setEmailError(null);
     }
+    setOpen(newOpen);
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {mode === "create" ? "Add New Client" : "Edit Client"}
-        </CardTitle>
-        <CardDescription>
-          {mode === "create"
-            ? "Enter the client information below"
-            : "Update the client information"}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button
+          variant={variant}
+          className={
+            variant === "default"
+              ? `rounded-2xl text-sm font-semibold text-white shadow-lg transition ${className || ""}`
+              : className || ""
+          }
+          style={
+            variant === "default"
+              ? {
+                  backgroundColor: themeConfig.colors.primary,
+                  boxShadow: themeConfig.colors.shadowPrimary,
+                }
+              : undefined
+          }
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          New Client
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white">
+        <DialogHeader>
+          <DialogTitle className="text-2xl">Add New Client</DialogTitle>
+          <DialogDescription>
+            Enter the client information below. Email must be unique for each client.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
           <div className="space-y-2">
             <Label htmlFor="full_name">
               Full Name <span className="text-red-500">*</span>
@@ -95,6 +118,7 @@ export function ClientForm({ client, mode }: ClientFormProps) {
               {...register("full_name")}
               placeholder="John Doe"
               disabled={isSubmitting}
+              className="rounded-xl border-gray-300 focus:border-[var(--theme-primary-hex)] focus:ring-[var(--theme-primary-hex)]"
             />
             {errors.full_name && (
               <p className="text-sm text-red-600">{errors.full_name.message}</p>
@@ -111,6 +135,7 @@ export function ClientForm({ client, mode }: ClientFormProps) {
               {...register("email")}
               placeholder="john@example.com"
               disabled={isSubmitting}
+              className="rounded-xl border-gray-300 focus:border-[var(--theme-primary-hex)] focus:ring-[var(--theme-primary-hex)]"
             />
             {(errors.email || emailError) && (
               <p className="text-sm text-red-600">{errors.email?.message || emailError}</p>
@@ -122,8 +147,9 @@ export function ClientForm({ client, mode }: ClientFormProps) {
             <Input
               id="phone"
               {...register("phone")}
-              placeholder="(555) 123-4567"
+              placeholder="+91 98765 43210"
               disabled={isSubmitting}
+              className="rounded-xl border-gray-300 focus:border-[var(--theme-primary-hex)] focus:ring-[var(--theme-primary-hex)]"
             />
             {errors.phone && (
               <p className="text-sm text-red-600">{errors.phone.message}</p>
@@ -137,6 +163,7 @@ export function ClientForm({ client, mode }: ClientFormProps) {
               type="date"
               {...register("date_of_birth")}
               disabled={isSubmitting}
+              className="rounded-xl border-gray-300 focus:border-[var(--theme-primary-hex)] focus:ring-[var(--theme-primary-hex)]"
             />
             {errors.date_of_birth && (
               <p className="text-sm text-red-600">
@@ -153,31 +180,36 @@ export function ClientForm({ client, mode }: ClientFormProps) {
               placeholder="Additional notes about the client..."
               rows={4}
               disabled={isSubmitting}
+              className="rounded-xl border-gray-300 focus:border-[var(--theme-primary-hex)] focus:ring-[var(--theme-primary-hex)]"
             />
             {errors.notes && (
               <p className="text-sm text-red-600">{errors.notes.message}</p>
             )}
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 pt-4">
             <Button
               type="button"
               variant="outline"
-              onClick={() => router.back()}
+              onClick={() => setOpen(false)}
               disabled={isSubmitting}
+              className="rounded-xl"
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting
-                ? "Saving..."
-                : mode === "create"
-                ? "Create Client"
-                : "Update Client"}
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="rounded-xl text-white"
+              style={{
+                backgroundColor: themeConfig.colors.primary,
+              }}
+            >
+              {isSubmitting ? "Creating..." : "Create Client"}
             </Button>
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </DialogContent>
+    </Dialog>
   );
 }

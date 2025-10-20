@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -18,6 +18,8 @@ import {
   Video,
   XCircle,
   Edit,
+  Copy,
+  Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,6 +32,11 @@ import {
 } from "@/lib/hooks/use-sessions";
 import type { SessionStatus } from "@/lib/types";
 import { themeConfig } from "@/lib/theme";
+import { VideoCall } from "@/components/sessions/video-call";
+import { AudioPlayer } from "@/components/sessions/audio-player";
+import { TranscriptViewer } from "@/components/sessions/transcript-viewer";
+import { SessionSummary } from "@/components/sessions/session-summary";
+import { toast } from "sonner";
 
 const statusLabels: Record<SessionStatus, string> = {
   scheduled: "Scheduled",
@@ -45,12 +52,31 @@ export default function SessionDetailPage({
 }) {
   const router = useRouter();
   const { id } = use(params);
-  const { data: session, isLoading, error } = useSession(id);
+  const { data: session, isLoading, error, refetch } = useSession(id);
   const updateStatus = useUpdateSessionStatus();
   const deleteSession = useDeleteSession();
+  const [showVideoCall, setShowVideoCall] = useState(false);
+  const [roomUrl, setRoomUrl] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+
+  // Fetch signed audio URL when recording is available
+  useEffect(() => {
+    if (session?.recordings?.[0]?.id) {
+      fetch(`/api/recordings/${session.recordings[0].id}/audio-url`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.url) {
+            setAudioUrl(data.url);
+          }
+        })
+        .catch((err) => console.error("Failed to fetch audio URL:", err));
+    }
+  }, [session?.recordings?.[0]?.id]);
 
   const handleStatusChange = async (status: SessionStatus) => {
     await updateStatus.mutateAsync({ id, status });
+    await refetch();
   };
 
   const handleDelete = async () => {
@@ -60,17 +86,51 @@ export default function SessionDetailPage({
     }
   };
 
+  const handleStartVideoCall = async () => {
+    try {
+      const response = await fetch("/api/daily/create-room", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId: id }),
+      });
+
+      if (!response.ok) throw new Error("Failed to create room");
+
+      const { roomUrl } = await response.json();
+      setRoomUrl(roomUrl);
+      await handleStatusChange("in_progress");
+      setShowVideoCall(true);
+    } catch (error) {
+      console.error("Failed to start video call:", error);
+      toast.error("Failed to start video call");
+    }
+  };
+
+  const handleCallEnd = async () => {
+    setShowVideoCall(false);
+    await handleStatusChange("completed");
+    await refetch();
+  };
+
+  const copyClientLink = () => {
+    const clientLink = `${window.location.origin}/join/${id}`;
+    navigator.clipboard.writeText(clientLink);
+    setCopied(true);
+    toast.success("Link copied! Send this to your client.");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const renderFallback = (content: React.ReactNode) => (
     <div className="space-y-8">
       <div
         className="rounded-3xl border bg-white/90 p-4 shadow-sm"
         style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
       >
-          <Button
-            variant="ghost"
-            asChild
-            className="group w-full justify-start rounded-2xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:text-[var(--theme-primary-hex)]"
-          >
+        <Button
+          variant="ghost"
+          asChild
+          className="group w-full justify-start rounded-2xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:text-[var(--theme-primary-hex)]"
+        >
           <Link href="/dashboard/sessions">
             <ArrowLeft className="mr-2 h-4 w-4 transition group-hover:-translate-x-1" />
             Back to Sessions
@@ -84,7 +144,9 @@ export default function SessionDetailPage({
   if (error) {
     return renderFallback(
       <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border border-rose-200 bg-rose-50/70 p-12 text-center shadow-sm">
-        <p className="text-sm font-semibold text-rose-500">Error loading session</p>
+        <p className="text-sm font-semibold text-rose-500">
+          Error loading session
+        </p>
         <p className="text-xs text-rose-400">{error.message}</p>
       </div>
     );
@@ -181,7 +243,9 @@ export default function SessionDetailPage({
             </p>
           </div>
           <Badge
-            className={`rounded-full border bg-white/70 px-4 py-1.5 text-xs font-semibold ${statusAccent[session.status as SessionStatus]}`}
+            className={`rounded-full border bg-white/70 px-4 py-1.5 text-xs font-semibold ${
+              statusAccent[session.status as SessionStatus]
+            }`}
             style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
           >
             {statusLabels[session.status as SessionStatus]}
@@ -288,10 +352,10 @@ export default function SessionDetailPage({
               )}
 
               {session.meeting_url && (
-            <div
-              className="rounded-2xl border bg-white/70 p-4"
-              style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-            >
+                <div
+                  className="rounded-2xl border bg-white/70 p-4"
+                  style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                >
                   <p className="text-xs font-medium uppercase tracking-[0.25em] text-slate-400">
                     Meeting URL
                   </p>
@@ -299,7 +363,7 @@ export default function SessionDetailPage({
                     href={session.meeting_url}
                     target="_blank"
                     rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-[var(--theme-primary-hex)] hover:underline"
+                    className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-[var(--theme-primary-hex)] hover:underline"
                   >
                     {session.meeting_url}
                   </a>
@@ -322,73 +386,164 @@ export default function SessionDetailPage({
             </CardContent>
           </Card>
 
-          <Card
-            className="rounded-3xl border shadow-sm"
-            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-          >
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-slate-900">
-                Recording
-              </CardTitle>
-              <p className="text-sm text-slate-500">
-                Access secure recordings once the session is complete.
-              </p>
-            </CardHeader>
-            <CardContent>
-              {session.status === "completed" ? (
-                <div className="rounded-2xl border border-dashed border-[rgba(120,57,238,0.32)] bg-[var(--theme-highlight)] p-8 text-center">
-                  <Video className="mx-auto mb-3 h-12 w-12 text-[var(--theme-primary-hex)]" />
-                  <p className="text-sm font-medium text-slate-600">
-                    Recording will be available here
-                  </p>
-                  <p className="mt-1 text-xs text-slate-400">
-                    Phase 4: Video Calling & Recording
-                  </p>
+          {/* Client Join Link */}
+          {session.status === "in_progress" && showVideoCall && (
+            <Card
+              className="rounded-3xl border shadow-sm bg-gradient-to-br from-purple-50 to-pink-50"
+              style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+            >
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                  <User className="h-5 w-5 text-purple-500" />
+                  Client Join Link
+                </CardTitle>
+                <p className="text-sm text-slate-500">
+                  Share this link with your client to join the session
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 rounded-xl border border-purple-200 bg-white px-4 py-3">
+                    <code className="text-sm text-slate-700 break-all">
+                      {`${
+                        typeof window !== "undefined"
+                          ? window.location.origin
+                          : ""
+                      }/join/${id}`}
+                    </code>
+                  </div>
+                  <Button
+                    onClick={copyClientLink}
+                    variant="outline"
+                    className="rounded-xl"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="h-4 w-4 mr-2 text-green-600" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-4 w-4 mr-2" />
+                        Copy
+                      </>
+                    )}
+                  </Button>
                 </div>
-              ) : (
-                <div
-                  className="rounded-2xl border bg-white/70 p-8 text-center text-sm text-slate-500"
-                  style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-                >
-                  Recording becomes accessible after the session wraps.
-                </div>
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
 
-          <Card
-            className="rounded-3xl border shadow-sm"
-            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-          >
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-slate-900">
-                Transcription
-              </CardTitle>
-              <p className="text-sm text-slate-500">
-                Review conversations with AI-powered transcripts.
-              </p>
-            </CardHeader>
-            <CardContent>
-              {session.status === "completed" ? (
-                <div className="rounded-2xl border border-dashed border-[rgba(120,57,238,0.32)] bg-[var(--theme-highlight)] p-8 text-center">
-                  <FileText className="mx-auto mb-3 h-12 w-12 text-[var(--theme-primary-hex)]" />
-                  <p className="text-sm font-medium text-slate-600">
-                    Transcription will be displayed here
-                  </p>
-                  <p className="mt-1 text-xs text-slate-400">
-                    Phase 5: Automatic Transcription with Groq
-                  </p>
-                </div>
+          {/* Video Call UI */}
+          {session.status === "in_progress" && showVideoCall && roomUrl && (
+            <Card
+              className="rounded-3xl border shadow-sm"
+              style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+            >
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-slate-900">
+                  Video Call
+                </CardTitle>
+                <p className="text-sm text-slate-500">
+                  Your session is being recorded automatically.
+                </p>
+              </CardHeader>
+              <CardContent>
+                <VideoCall
+                  roomUrl={roomUrl}
+                  sessionId={id}
+                  onCallEnd={handleCallEnd}
+                />
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Recording Section */}
+          {session.recordings && session.recordings.length > 0 && (
+            <>
+              {audioUrl ? (
+                <AudioPlayer
+                  fileUrl={audioUrl}
+                  fileName={session.recordings[0].file_path}
+                />
               ) : (
-                <div
-                  className="rounded-2xl border bg-white/70 p-8 text-center text-sm text-slate-500"
+                <Card
+                  className="rounded-3xl border shadow-sm"
                   style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
                 >
-                  Transcription unlocks after the session is complete.
-                </div>
+                  <CardContent className="p-12 text-center">
+                    <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4" />
+                    <p className="text-sm text-slate-600">Loading audio...</p>
+                  </CardContent>
+                </Card>
               )}
-            </CardContent>
-          </Card>
+
+              {session.recordings[0].transcript && (
+                <TranscriptViewer
+                  transcript={session.recordings[0].transcript}
+                  recordingId={session.recordings[0].id}
+                  onUpdate={() => refetch()}
+                />
+              )}
+
+              {/* Show summary section if: summary exists, or is processing/failed */}
+              {(session.recordings[0].summary ||
+                session.recordings[0].summary_status === "processing" ||
+                session.recordings[0].summary_status === "failed") && (
+                <SessionSummary
+                  summary={session.recordings[0].summary || ""}
+                  recordingId={session.recordings[0].id}
+                  summaryStatus={
+                    session.recordings[0].summary_status || "pending"
+                  }
+                  onRegenerate={() => refetch()}
+                />
+              )}
+
+              {session.recordings[0].transcript_status === "processing" && (
+                <Card
+                  className="rounded-3xl border shadow-sm"
+                  style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                >
+                  <CardContent className="p-12 text-center">
+                    <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4" />
+                    <p className="text-sm text-slate-600">
+                      Transcribing audio...
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          )}
+
+          {/* Empty State - No Recording Yet */}
+          {(!session.recordings || session.recordings.length === 0) &&
+            session.status === "completed" && (
+              <Card
+                className="rounded-3xl border shadow-sm"
+                style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+              >
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-slate-900">
+                    Recording
+                  </CardTitle>
+                  <p className="text-sm text-slate-500">
+                    Processing your session recording...
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="rounded-2xl border border-dashed border-[rgba(120,57,238,0.32)] bg-[var(--theme-highlight)] p-8 text-center">
+                    <Video className="mx-auto mb-3 h-12 w-12 text-[var(--theme-primary-hex)]" />
+                    <p className="text-sm font-medium text-slate-600">
+                      Recording is being processed
+                    </p>
+                    <p className="mt-1 text-xs text-slate-400">
+                      This may take a few minutes
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
         </div>
 
         <Card
@@ -411,11 +566,11 @@ export default function SessionDetailPage({
                   backgroundColor: themeConfig.colors.primary,
                   boxShadow: themeConfig.colors.shadowPrimary,
                 }}
-                onClick={() => handleStatusChange("in_progress")}
+                onClick={handleStartVideoCall}
                 disabled={updateStatus.isPending}
               >
-                <Play className="mr-2 h-4 w-4" />
-                Start Session
+                <Video className="mr-2 h-4 w-4" />
+                Start Video Call
               </Button>
             )}
             {session.status === "in_progress" && (
@@ -428,7 +583,8 @@ export default function SessionDetailPage({
                 Complete Session
               </Button>
             )}
-            {(session.status === "scheduled" || session.status === "in_progress") && (
+            {(session.status === "scheduled" ||
+              session.status === "in_progress") && (
               <Button
                 className="w-full rounded-xl border text-sm font-semibold text-rose-500 hover:bg-rose-50"
                 variant="outline"

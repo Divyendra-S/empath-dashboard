@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { NotebookPen, Plus, Sparkles, UsersRound } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { NotebookPen, Sparkles, UsersRound } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useClients } from "@/lib/hooks/use-clients";
 import { ClientCard } from "@/components/clients/client-card";
 import { ClientSearch } from "@/components/clients/client-search";
+import { AddClientModal } from "@/components/clients/add-client-modal";
 import { themeConfig } from "@/lib/theme";
 
 export default function ClientsPage() {
@@ -49,19 +48,7 @@ export default function ClientsPage() {
             
           </div>
           <div className="flex flex-col items-end gap-3">
-            <Button
-              asChild
-              className="rounded-2xl text-sm font-semibold text-white shadow-lg transition"
-              style={{
-                backgroundColor: themeConfig.colors.primary,
-                boxShadow: themeConfig.colors.shadowPrimary,
-              }}
-            >
-              <Link href="/dashboard/clients/new">
-                <Plus className="mr-2 h-4 w-4" />
-                New Client
-              </Link>
-            </Button>
+            <AddClientModal />
             <div
               className="rounded-xl border bg-white/70 px-4 py-2 text-xs font-medium text-[var(--theme-primary-hex)] shadow-sm"
               style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
@@ -81,17 +68,7 @@ export default function ClientsPage() {
             <NotebookPen className="h-4 w-4 text-[var(--theme-primary-hex)]" />
             Client Lookup
           </div>
-          <Button
-            asChild
-            variant="ghost"
-            size="sm"
-            className="hidden rounded-xl text-xs font-medium text-slate-600 hover:text-[var(--theme-primary-hex)] md:flex"
-            style={{ borderRadius: "0.75rem" }}
-          >
-            <Link href="/dashboard/clients/new">
-              <Plus className="mr-2 h-4 w-4" /> Add Client
-            </Link>
-          </Button>
+          <AddClientModal variant="ghost" className="hidden rounded-xl text-xs font-medium text-slate-600 hover:text-[var(--theme-primary-hex)] md:flex" />
         </div>
         <ClientSearch value={search} onChange={setSearch} />
       </div>
@@ -121,19 +98,7 @@ export default function ClientsPage() {
             <p className="text-sm text-slate-500">
               Start building trusted relationships by adding your first client.
             </p>
-            <Button
-              asChild
-              className="rounded-xl text-sm font-semibold text-white shadow-lg transition"
-              style={{
-                backgroundColor: themeConfig.colors.primary,
-                boxShadow: themeConfig.colors.shadowPrimary,
-              }}
-            >
-              <Link href="/dashboard/clients/new">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Client
-              </Link>
-            </Button>
+            <AddClientModal />
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

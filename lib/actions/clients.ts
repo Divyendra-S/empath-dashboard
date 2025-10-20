@@ -169,3 +169,29 @@ export async function getClientStats(id: string) {
     completed,
   };
 }
+
+export async function checkEmailUniqueness(email: string, excludeId?: string) {
+  const supabase = await createSupabaseClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) throw new Error("Unauthorized");
+
+  let query = supabase
+    .from("clients")
+    .select("id")
+    .eq("therapist_id", user.id)
+    .eq("email", email)
+    .eq("status", "active");
+
+  if (excludeId) {
+    query = query.neq("id", excludeId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) throw error;
+
+  return !data || data.length === 0;
+}

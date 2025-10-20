@@ -53,6 +53,8 @@ export type TranscriptStatus =
   | "completed"
   | "failed";
 
+export type SummaryStatus = "pending" | "processing" | "completed" | "failed";
+
 export type Recording = {
   id: string;
   session_id: string;
@@ -61,6 +63,8 @@ export type Recording = {
   duration_seconds: number | null;
   transcript: string | null;
   transcript_status: TranscriptStatus;
+  summary: string | null;
+  summary_status: SummaryStatus;
   created_at: string;
 };
 
