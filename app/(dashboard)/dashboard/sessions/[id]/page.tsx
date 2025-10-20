@@ -20,11 +20,16 @@ import {
   Edit,
   Copy,
   Check,
+  Mic,
+  Sparkles,
+  Info,
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   useSession,
   useUpdateSessionStatus,
@@ -34,7 +39,7 @@ import type { SessionStatus } from "@/lib/types";
 import { themeConfig } from "@/lib/theme";
 import { VideoCall } from "@/components/sessions/video-call";
 import { AudioPlayer } from "@/components/sessions/audio-player";
-import { TranscriptViewer } from "@/components/sessions/transcript-viewer";
+import { ConversationTranscript } from "@/components/sessions/conversation-transcript";
 import { SessionSummary } from "@/components/sessions/session-summary";
 import { toast } from "sonner";
 
@@ -265,8 +270,312 @@ export default function SessionDetailPage({
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="md:col-span-2 space-y-6">
+      <Tabs defaultValue="recording" className="space-y-6">
+        <div
+          className="rounded-3xl border bg-white/70 p-2 shadow-sm w-full md:w-auto inline-flex"
+          style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+        >
+          <TabsList className="w-full bg-transparent p-0 h-auto gap-2">
+            <TabsTrigger
+              value="recording"
+              className="flex-1 md:flex-none rounded-2xl data-[state=active]:bg-white data-[state=active]:shadow-md"
+            >
+              <Mic className="mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Recording & Transcript</span>
+              <span className="sm:hidden">Recording</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="summary"
+              className="flex-1 md:flex-none rounded-2xl data-[state=active]:bg-white data-[state=active]:shadow-md"
+            >
+              <Sparkles className="mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">AI Summary</span>
+              <span className="sm:hidden">Summary</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="info"
+              className="flex-1 md:flex-none rounded-2xl data-[state=active]:bg-white data-[state=active]:shadow-md"
+            >
+              <Info className="mr-2 h-4 w-4" />
+              <span className="hidden sm:inline">Session Info</span>
+              <span className="sm:hidden">Info</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        {/* Recording & Transcript Tab */}
+        <TabsContent value="recording" className="space-y-6">
+          <div className="grid gap-6 md:grid-cols-3">
+            <div className="md:col-span-2 space-y-6">
+              {/* Client Join Link */}
+              {session.status === "in_progress" && showVideoCall && (
+                <Card
+                  className="rounded-3xl border shadow-sm bg-gradient-to-br from-purple-50 to-pink-50"
+                  style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                >
+                  <CardHeader>
+                    <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                      <User className="h-5 w-5 text-purple-500" />
+                      Client Join Link
+                    </CardTitle>
+                    <p className="text-sm text-slate-500">
+                      Share this link with your client to join the session
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1 rounded-xl border border-purple-200 bg-white px-4 py-3">
+                        <code className="text-sm text-slate-700 break-all">
+                          {`${
+                            typeof window !== "undefined"
+                              ? window.location.origin
+                              : ""
+                          }/join/${id}`}
+                        </code>
+                      </div>
+                      <Button
+                        onClick={copyClientLink}
+                        variant="outline"
+                        className="rounded-xl"
+                      >
+                        {copied ? (
+                          <>
+                            <Check className="h-4 w-4 mr-2 text-green-600" />
+                            Copied!
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-4 w-4 mr-2" />
+                            Copy
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Video Call UI */}
+              {session.status === "in_progress" && showVideoCall && roomUrl && (
+                <Card
+                  className="rounded-3xl border shadow-sm"
+                  style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                >
+                  <CardHeader>
+                    <CardTitle className="text-lg font-semibold text-slate-900">
+                      Video Call
+                    </CardTitle>
+                    <p className="text-sm text-slate-500">
+                      Your session is being recorded automatically.
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <VideoCall
+                      roomUrl={roomUrl}
+                      sessionId={id}
+                      onCallEnd={handleCallEnd}
+                    />
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Recording Section */}
+              {session.recordings && session.recordings.length > 0 && (
+                <>
+                  {audioUrl ? (
+                    <AudioPlayer
+                      fileUrl={audioUrl}
+                      fileName={session.recordings[0].file_path}
+                    />
+                  ) : (
+                    <Card
+                      className="rounded-3xl border shadow-sm"
+                      style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                    >
+                      <CardContent className="p-12 text-center">
+                        <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4" />
+                        <p className="text-sm text-slate-600">
+                          Loading audio...
+                        </p>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {session.recordings[0].transcript && (
+                    <ConversationTranscript
+                      transcript={session.recordings[0].transcript}
+                      recordingId={session.recordings[0].id}
+                      clientName={session.client.full_name}
+                      onUpdate={() => refetch()}
+                    />
+                  )}
+
+                  {session.recordings[0].transcript_status === "processing" && (
+                    <Card
+                      className="rounded-3xl border shadow-sm"
+                      style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                    >
+                      <CardContent className="p-12 text-center">
+                        <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4" />
+                        <p className="text-sm text-slate-600">
+                          Transcribing audio...
+                        </p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </>
+              )}
+
+              {/* Empty State - No Recording Yet */}
+              {(!session.recordings || session.recordings.length === 0) &&
+                session.status === "completed" && (
+                  <Card
+                    className="rounded-3xl border shadow-sm"
+                    style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                  >
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-slate-900">
+                        Recording
+                      </CardTitle>
+                      <p className="text-sm text-slate-500">
+                        Processing your session recording...
+                      </p>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="rounded-2xl border border-dashed border-[rgba(120,57,238,0.32)] bg-[var(--theme-highlight)] p-8 text-center">
+                        <Video className="mx-auto mb-3 h-12 w-12 text-[var(--theme-primary-hex)]" />
+                        <p className="text-sm font-medium text-slate-600">
+                          Recording is being processed
+                        </p>
+                        <p className="mt-1 text-xs text-slate-400">
+                          This may take a few minutes
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+            </div>
+
+            {/* Quick Actions Sidebar */}
+            <Card
+              className="rounded-3xl border shadow-sm"
+              style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+            >
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold text-slate-900">
+                  Quick Actions
+                </CardTitle>
+                <p className="text-sm text-slate-500">
+                  Stay responsive to session status changes.
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {session.status === "scheduled" && (
+                  <Button
+                    className="w-full rounded-xl text-sm font-semibold text-white shadow-lg transition"
+                    style={{
+                      backgroundColor: themeConfig.colors.primary,
+                      boxShadow: themeConfig.colors.shadowPrimary,
+                    }}
+                    onClick={handleStartVideoCall}
+                    disabled={updateStatus.isPending}
+                  >
+                    <Video className="mr-2 h-4 w-4" />
+                    Start Video Call
+                  </Button>
+                )}
+                {session.status === "in_progress" && (
+                  <Button
+                    className="w-full rounded-xl bg-emerald-500 text-sm font-semibold text-white shadow-lg transition hover:bg-emerald-400"
+                    onClick={() => handleStatusChange("completed")}
+                    disabled={updateStatus.isPending}
+                  >
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                    Complete Session
+                  </Button>
+                )}
+                {(session.status === "scheduled" ||
+                  session.status === "in_progress") && (
+                  <Button
+                    className="w-full rounded-xl border text-sm font-semibold text-rose-500 hover:bg-rose-50"
+                    variant="outline"
+                    style={{ borderColor: "rgba(244, 63, 94, 0.38)" }}
+                    onClick={() => handleStatusChange("cancelled")}
+                    disabled={updateStatus.isPending}
+                  >
+                    <XCircle className="mr-2 h-4 w-4" />
+                    Cancel Session
+                  </Button>
+                )}
+                <Button
+                  className="w-full rounded-xl border text-sm font-semibold text-[var(--theme-primary-hex)] hover:bg-[var(--theme-highlight)]"
+                  variant="outline"
+                  style={{ borderColor: "rgba(120, 57, 238, 0.24)" }}
+                  onClick={() =>
+                    router.push(`/dashboard/clients/${session.client.id}`)
+                  }
+                >
+                  <User className="mr-2 h-4 w-4" />
+                  View Client Profile
+                </Button>
+                <div className="rounded-xl border border-[rgba(120,57,238,0.32)] bg-[var(--theme-highlight)] p-4 text-xs font-medium text-[var(--theme-primary-hex)]">
+                  Every update keeps your client journey aligned.
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* AI Summary Tab */}
+        <TabsContent value="summary" className="space-y-6">
+          {session.recordings && session.recordings.length > 0 ? (
+            session.recordings[0].summary ||
+            session.recordings[0].summary_status === "processing" ||
+            session.recordings[0].summary_status === "failed" ? (
+              <SessionSummary
+                summary={session.recordings[0].summary || ""}
+                recordingId={session.recordings[0].id}
+                summaryStatus={
+                  session.recordings[0].summary_status || "pending"
+                }
+                onRegenerate={() => refetch()}
+              />
+            ) : (
+              <Card
+                className="rounded-3xl border shadow-sm"
+                style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+              >
+                <CardContent className="p-12 text-center">
+                  <Sparkles className="mx-auto mb-4 h-12 w-12 text-purple-400" />
+                  <p className="text-sm font-medium text-slate-600">
+                    No AI summary available yet
+                  </p>
+                  <p className="mt-1 text-xs text-slate-400">
+                    Complete the session to generate a summary
+                  </p>
+                </CardContent>
+              </Card>
+            )
+          ) : (
+            <Card
+              className="rounded-3xl border shadow-sm"
+              style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+            >
+              <CardContent className="p-12 text-center">
+                <Sparkles className="mx-auto mb-4 h-12 w-12 text-purple-400" />
+                <p className="text-sm font-medium text-slate-600">
+                  No recording found
+                </p>
+                <p className="mt-1 text-xs text-slate-400">
+                  Start and complete a session to generate a summary
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+
+        {/* Session Information Tab */}
+        <TabsContent value="info" className="space-y-6">
           <Card
             className="rounded-3xl border shadow-sm"
             style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
@@ -397,234 +706,8 @@ export default function SessionDetailPage({
               )}
             </CardContent>
           </Card>
-
-          {/* Client Join Link */}
-          {session.status === "in_progress" && showVideoCall && (
-            <Card
-              className="rounded-3xl border shadow-sm bg-gradient-to-br from-purple-50 to-pink-50"
-              style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-            >
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                  <User className="h-5 w-5 text-purple-500" />
-                  Client Join Link
-                </CardTitle>
-                <p className="text-sm text-slate-500">
-                  Share this link with your client to join the session
-                </p>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1 rounded-xl border border-purple-200 bg-white px-4 py-3">
-                    <code className="text-sm text-slate-700 break-all">
-                      {`${
-                        typeof window !== "undefined"
-                          ? window.location.origin
-                          : ""
-                      }/join/${id}`}
-                    </code>
-                  </div>
-                  <Button
-                    onClick={copyClientLink}
-                    variant="outline"
-                    className="rounded-xl"
-                  >
-                    {copied ? (
-                      <>
-                        <Check className="h-4 w-4 mr-2 text-green-600" />
-                        Copied!
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="h-4 w-4 mr-2" />
-                        Copy
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Video Call UI */}
-          {session.status === "in_progress" && showVideoCall && roomUrl && (
-            <Card
-              className="rounded-3xl border shadow-sm"
-              style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-            >
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-slate-900">
-                  Video Call
-                </CardTitle>
-                <p className="text-sm text-slate-500">
-                  Your session is being recorded automatically.
-                </p>
-              </CardHeader>
-              <CardContent>
-                <VideoCall
-                  roomUrl={roomUrl}
-                  sessionId={id}
-                  onCallEnd={handleCallEnd}
-                />
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Recording Section */}
-          {session.recordings && session.recordings.length > 0 && (
-            <>
-              {audioUrl ? (
-                <AudioPlayer
-                  fileUrl={audioUrl}
-                  fileName={session.recordings[0].file_path}
-                />
-              ) : (
-                <Card
-                  className="rounded-3xl border shadow-sm"
-                  style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-                >
-                  <CardContent className="p-12 text-center">
-                    <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4" />
-                    <p className="text-sm text-slate-600">Loading audio...</p>
-                  </CardContent>
-                </Card>
-              )}
-
-              {session.recordings[0].transcript && (
-                <TranscriptViewer
-                  transcript={session.recordings[0].transcript}
-                  recordingId={session.recordings[0].id}
-                  onUpdate={() => refetch()}
-                />
-              )}
-
-              {/* Show summary section if: summary exists, or is processing/failed */}
-              {(session.recordings[0].summary ||
-                session.recordings[0].summary_status === "processing" ||
-                session.recordings[0].summary_status === "failed") && (
-                <SessionSummary
-                  summary={session.recordings[0].summary || ""}
-                  recordingId={session.recordings[0].id}
-                  summaryStatus={
-                    session.recordings[0].summary_status || "pending"
-                  }
-                  onRegenerate={() => refetch()}
-                />
-              )}
-
-              {session.recordings[0].transcript_status === "processing" && (
-                <Card
-                  className="rounded-3xl border shadow-sm"
-                  style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-                >
-                  <CardContent className="p-12 text-center">
-                    <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4" />
-                    <p className="text-sm text-slate-600">
-                      Transcribing audio...
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-            </>
-          )}
-
-          {/* Empty State - No Recording Yet */}
-          {(!session.recordings || session.recordings.length === 0) &&
-            session.status === "completed" && (
-              <Card
-                className="rounded-3xl border shadow-sm"
-                style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-              >
-                <CardHeader>
-                  <CardTitle className="text-lg font-semibold text-slate-900">
-                    Recording
-                  </CardTitle>
-                  <p className="text-sm text-slate-500">
-                    Processing your session recording...
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <div className="rounded-2xl border border-dashed border-[rgba(120,57,238,0.32)] bg-[var(--theme-highlight)] p-8 text-center">
-                    <Video className="mx-auto mb-3 h-12 w-12 text-[var(--theme-primary-hex)]" />
-                    <p className="text-sm font-medium text-slate-600">
-                      Recording is being processed
-                    </p>
-                    <p className="mt-1 text-xs text-slate-400">
-                      This may take a few minutes
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-        </div>
-
-        <Card
-          className="rounded-3xl border shadow-sm"
-          style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-        >
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-slate-900">
-              Quick Actions
-            </CardTitle>
-            <p className="text-sm text-slate-500">
-              Stay responsive to session status changes.
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {session.status === "scheduled" && (
-              <Button
-                className="w-full rounded-xl text-sm font-semibold text-white shadow-lg transition"
-                style={{
-                  backgroundColor: themeConfig.colors.primary,
-                  boxShadow: themeConfig.colors.shadowPrimary,
-                }}
-                onClick={handleStartVideoCall}
-                disabled={updateStatus.isPending}
-              >
-                <Video className="mr-2 h-4 w-4" />
-                Start Video Call
-              </Button>
-            )}
-            {session.status === "in_progress" && (
-              <Button
-                className="w-full rounded-xl bg-emerald-500 text-sm font-semibold text-white shadow-lg transition hover:bg-emerald-400"
-                onClick={() => handleStatusChange("completed")}
-                disabled={updateStatus.isPending}
-              >
-                <CheckCircle className="mr-2 h-4 w-4" />
-                Complete Session
-              </Button>
-            )}
-            {(session.status === "scheduled" ||
-              session.status === "in_progress") && (
-              <Button
-                className="w-full rounded-xl border text-sm font-semibold text-rose-500 hover:bg-rose-50"
-                variant="outline"
-                style={{ borderColor: "rgba(244, 63, 94, 0.38)" }}
-                onClick={() => handleStatusChange("cancelled")}
-                disabled={updateStatus.isPending}
-              >
-                <XCircle className="mr-2 h-4 w-4" />
-                Cancel Session
-              </Button>
-            )}
-            <Button
-              className="w-full rounded-xl border text-sm font-semibold text-[var(--theme-primary-hex)] hover:bg-[var(--theme-highlight)]"
-              variant="outline"
-              style={{ borderColor: "rgba(120, 57, 238, 0.24)" }}
-              onClick={() =>
-                router.push(`/dashboard/clients/${session.client.id}`)
-              }
-            >
-              <User className="mr-2 h-4 w-4" />
-              View Client Profile
-            </Button>
-            <div className="rounded-xl border border-[rgba(120,57,238,0.32)] bg-[var(--theme-highlight)] p-4 text-xs font-medium text-[var(--theme-primary-hex)]">
-              Every update keeps your client journey aligned.
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
