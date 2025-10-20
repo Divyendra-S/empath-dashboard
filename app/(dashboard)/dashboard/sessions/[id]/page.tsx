@@ -10,9 +10,7 @@ import {
   CalendarClock,
   CheckCircle,
   Clock,
-  FileText,
   NotebookPen,
-  Play,
   Trash2,
   User,
   Video,
@@ -187,47 +185,7 @@ export default function SessionDetailPage({
   };
 
   return (
-    <div className="space-y-8">
-      <div
-        className="rounded-3xl border bg-white/90 p-4 shadow-sm"
-        style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-      >
-        <div className="flex items-center justify-between">
-          <Button
-            variant="ghost"
-            asChild
-            className="group rounded-2xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:text-[var(--theme-primary-hex)]"
-          >
-            <Link href="/dashboard/sessions">
-              <ArrowLeft className="mr-2 h-4 w-4 transition group-hover:-translate-x-1" />
-              Back to Sessions
-            </Link>
-          </Button>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-xl text-[var(--theme-primary-hex)] hover:bg-[var(--theme-highlight)]"
-              style={{ borderColor: "rgba(120, 57, 238, 0.24)" }}
-              onClick={() => router.push(`/dashboard/sessions/${id}/edit`)}
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              Edit
-            </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              className="rounded-xl"
-              onClick={handleDelete}
-              disabled={deleteSession.isPending}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
-            </Button>
-          </div>
-        </div>
-      </div>
-
+    <div className="space-y-6 overflow-x-hidden">
       <div
         className="relative overflow-hidden rounded-3xl border p-6 shadow-sm"
         style={{
@@ -245,6 +203,16 @@ export default function SessionDetailPage({
         />
         <div className="relative flex flex-wrap items-center justify-between gap-6">
           <div>
+            <Button
+              variant="ghost"
+              asChild
+              className="group -ml-2 mb-3 rounded-xl px-2 py-1.5 text-xs font-medium text-slate-500 transition hover:text-[var(--theme-primary-hex)]"
+            >
+              <Link href="/dashboard/sessions">
+                <ArrowLeft className="mr-1.5 h-3.5 w-3.5 transition group-hover:-translate-x-1" />
+                Back
+              </Link>
+            </Button>
             <div
               className="inline-flex items-center gap-2 rounded-full border bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[var(--theme-primary-hex)]/80"
               style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
@@ -259,56 +227,77 @@ export default function SessionDetailPage({
               Keep every milestone connected to your client&apos;s journey.
             </p>
           </div>
-          <Badge
-            className={`rounded-full border bg-white/70 px-4 py-1.5 text-xs font-semibold ${
-              statusAccent[session.status as SessionStatus]
-            }`}
-            style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-          >
-            {statusLabels[session.status as SessionStatus]}
-          </Badge>
+          <div className="flex items-center gap-3">
+            <Badge
+              className={`rounded-full border bg-white/70 px-4 py-1.5 text-xs font-semibold ${
+                statusAccent[session.status as SessionStatus]
+              }`}
+              style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+            >
+              {statusLabels[session.status as SessionStatus]}
+            </Badge>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl text-[var(--theme-primary-hex)] hover:bg-[var(--theme-highlight)]"
+                style={{ borderColor: "rgba(120, 57, 238, 0.24)" }}
+                onClick={() => router.push(`/dashboard/sessions/${id}/edit`)}
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="rounded-xl"
+                onClick={handleDelete}
+                disabled={deleteSession.isPending}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
       <Tabs defaultValue="recording" className="space-y-6">
         <div
-          className="rounded-3xl border bg-white/70 p-2 shadow-sm w-full md:w-auto inline-flex"
+          className="rounded-3xl border bg-white/70 p-2 shadow-sm max-w-fit"
           style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
         >
-          <TabsList className="w-full bg-transparent p-0 h-auto gap-2">
+          <TabsList className="bg-transparent p-0 h-auto gap-2">
             <TabsTrigger
               value="recording"
-              className="flex-1 md:flex-none rounded-2xl data-[state=active]:bg-white data-[state=active]:shadow-md"
+              className="rounded-2xl px-4 py-2 data-[state=active]:bg-white data-[state=active]:shadow-md"
             >
               <Mic className="mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">Recording & Transcript</span>
-              <span className="sm:hidden">Recording</span>
+              Recording & Transcript
             </TabsTrigger>
             <TabsTrigger
               value="summary"
-              className="flex-1 md:flex-none rounded-2xl data-[state=active]:bg-white data-[state=active]:shadow-md"
+              className="rounded-2xl px-4 py-2 data-[state=active]:bg-white data-[state=active]:shadow-md"
             >
               <Sparkles className="mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">AI Summary</span>
-              <span className="sm:hidden">Summary</span>
+              AI Summary
             </TabsTrigger>
             <TabsTrigger
               value="info"
-              className="flex-1 md:flex-none rounded-2xl data-[state=active]:bg-white data-[state=active]:shadow-md"
+              className="rounded-2xl px-4 py-2 data-[state=active]:bg-white data-[state=active]:shadow-md"
             >
               <Info className="mr-2 h-4 w-4" />
-              <span className="hidden sm:inline">Session Info</span>
-              <span className="sm:hidden">Info</span>
+              Session Info
             </TabsTrigger>
           </TabsList>
         </div>
 
         {/* Recording & Transcript Tab */}
         <TabsContent value="recording" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className="md:col-span-2 space-y-6">
-              {/* Client Join Link */}
-              {session.status === "in_progress" && showVideoCall && (
+          {/* In Progress - Show video call and quick actions */}
+          {session.status === "in_progress" && (
+            <div className="grid gap-6 md:grid-cols-3">
+              <div className="md:col-span-2 space-y-6">
+                {/* Client Join Link */}
+                {showVideoCall && (
                 <Card
                   className="rounded-3xl border shadow-sm bg-gradient-to-br from-purple-50 to-pink-50"
                   style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
@@ -355,80 +344,201 @@ export default function SessionDetailPage({
                 </Card>
               )}
 
-              {/* Video Call UI */}
-              {session.status === "in_progress" && showVideoCall && roomUrl && (
-                <Card
-                  className="rounded-3xl border shadow-sm"
-                  style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-                >
-                  <CardHeader>
-                    <CardTitle className="text-lg font-semibold text-slate-900">
-                      Video Call
-                    </CardTitle>
-                    <p className="text-sm text-slate-500">
-                      Your session is being recorded automatically.
-                    </p>
-                  </CardHeader>
-                  <CardContent>
-                    <VideoCall
-                      roomUrl={roomUrl}
-                      sessionId={id}
-                      onCallEnd={handleCallEnd}
-                    />
-                  </CardContent>
-                </Card>
-              )}
+                {/* Video Call UI */}
+                {showVideoCall && roomUrl && (
+                  <Card
+                    className="rounded-3xl border shadow-sm"
+                    style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                  >
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-slate-900">
+                        Video Call
+                      </CardTitle>
+                      <p className="text-sm text-slate-500">
+                        Your session is being recorded automatically.
+                      </p>
+                    </CardHeader>
+                    <CardContent>
+                      <VideoCall
+                        roomUrl={roomUrl}
+                        sessionId={id}
+                        onCallEnd={handleCallEnd}
+                      />
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
 
-              {/* Recording Section */}
-              {session.recordings && session.recordings.length > 0 && (
-                <>
-                  {audioUrl ? (
-                    <AudioPlayer
-                      fileUrl={audioUrl}
-                      fileName={session.recordings[0].file_path}
-                    />
-                  ) : (
-                    <Card
-                      className="rounded-3xl border shadow-sm"
-                      style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-                    >
-                      <CardContent className="p-12 text-center">
-                        <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4" />
-                        <p className="text-sm text-slate-600">
-                          Loading audio...
-                        </p>
-                      </CardContent>
-                    </Card>
-                  )}
+              {/* Quick Actions Sidebar for in_progress */}
+              <Card
+                className="rounded-3xl border shadow-sm"
+                style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+              >
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-slate-900">
+                    Quick Actions
+                  </CardTitle>
+                  <p className="text-sm text-slate-500">
+                    Stay responsive to session status changes.
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button
+                    className="w-full rounded-xl bg-emerald-500 text-sm font-semibold text-white shadow-lg transition hover:bg-emerald-400"
+                    onClick={() => handleStatusChange("completed")}
+                    disabled={updateStatus.isPending}
+                  >
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                    Complete Session
+                  </Button>
+                  <Button
+                    className="w-full rounded-xl border text-sm font-semibold text-rose-500 hover:bg-rose-50"
+                    variant="outline"
+                    style={{ borderColor: "rgba(244, 63, 94, 0.38)" }}
+                    onClick={() => handleStatusChange("cancelled")}
+                    disabled={updateStatus.isPending}
+                  >
+                    <XCircle className="mr-2 h-4 w-4" />
+                    Cancel Session
+                  </Button>
+                  <Button
+                    className="w-full rounded-xl border text-sm font-semibold text-[var(--theme-primary-hex)] hover:bg-[var(--theme-highlight)]"
+                    variant="outline"
+                    style={{ borderColor: "rgba(120, 57, 238, 0.24)" }}
+                    onClick={() =>
+                      router.push(`/dashboard/clients/${session.client.id}`)
+                    }
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    View Client Profile
+                  </Button>
+                  <div className="rounded-xl border border-[rgba(120,57,238,0.32)] bg-[var(--theme-highlight)] p-4 text-xs font-medium text-[var(--theme-primary-hex)]">
+                    Every update keeps your client journey aligned.
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
-                  {session.recordings[0].transcript && (
-                    <ConversationTranscript
-                      transcript={session.recordings[0].transcript}
-                      recordingId={session.recordings[0].id}
-                      clientName={session.client.full_name}
-                      onUpdate={() => refetch()}
-                    />
-                  )}
+          {/* Scheduled - Show quick actions only */}
+          {session.status === "scheduled" && (
+            <div className="max-w-md">
+              <Card
+                className="rounded-3xl border shadow-sm"
+                style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+              >
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-slate-900">
+                    Quick Actions
+                  </CardTitle>
+                  <p className="text-sm text-slate-500">
+                    Start your session when ready.
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <Button
+                    className="w-full rounded-xl text-sm font-semibold text-white shadow-lg transition"
+                    style={{
+                      backgroundColor: themeConfig.colors.primary,
+                      boxShadow: themeConfig.colors.shadowPrimary,
+                    }}
+                    onClick={handleStartVideoCall}
+                    disabled={updateStatus.isPending}
+                  >
+                    <Video className="mr-2 h-4 w-4" />
+                    Start Video Call
+                  </Button>
+                  <Button
+                    className="w-full rounded-xl border text-sm font-semibold text-rose-500 hover:bg-rose-50"
+                    variant="outline"
+                    style={{ borderColor: "rgba(244, 63, 94, 0.38)" }}
+                    onClick={() => handleStatusChange("cancelled")}
+                    disabled={updateStatus.isPending}
+                  >
+                    <XCircle className="mr-2 h-4 w-4" />
+                    Cancel Session
+                  </Button>
+                  <Button
+                    className="w-full rounded-xl border text-sm font-semibold text-[var(--theme-primary-hex)] hover:bg-[var(--theme-highlight)]"
+                    variant="outline"
+                    style={{ borderColor: "rgba(120, 57, 238, 0.24)" }}
+                    onClick={() =>
+                      router.push(`/dashboard/clients/${session.client.id}`)
+                    }
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    View Client Profile
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
-                  {session.recordings[0].transcript_status === "processing" && (
-                    <Card
-                      className="rounded-3xl border shadow-sm"
-                      style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-                    >
-                      <CardContent className="p-12 text-center">
-                        <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4" />
-                        <p className="text-sm text-slate-600">
-                          Transcribing audio...
-                        </p>
-                      </CardContent>
-                    </Card>
-                  )}
-                </>
-              )}
+          {/* Completed/Cancelled - Show recordings with transcript left, audio right */}
+          {(session.status === "completed" || session.status === "cancelled") && (
+            <>
+              {session.recordings && session.recordings.length > 0 ? (
+                <div className="grid gap-6 lg:grid-cols-3">
+                  {/* Transcript - Left side, takes more space */}
+                  <div className="lg:col-span-2 space-y-6">
+                    {session.recordings[0].transcript ? (
+                      <ConversationTranscript
+                        transcript={session.recordings[0].transcript}
+                        recordingId={session.recordings[0].id}
+                        clientName={session.client.full_name}
+                        onUpdate={() => refetch()}
+                      />
+                    ) : session.recordings[0].transcript_status === "processing" ? (
+                      <Card
+                        className="rounded-3xl border shadow-sm"
+                        style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                      >
+                        <CardContent className="p-12 text-center">
+                          <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4" />
+                          <p className="text-sm text-slate-600">
+                            Transcribing audio...
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      <Card
+                        className="rounded-3xl border shadow-sm"
+                        style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                      >
+                        <CardContent className="p-12 text-center">
+                          <MessageSquare className="mx-auto mb-4 h-12 w-12 text-purple-400" />
+                          <p className="text-sm font-medium text-slate-600">
+                            No transcript available
+                          </p>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </div>
 
-              {/* Empty State - No Recording Yet */}
-              {(!session.recordings || session.recordings.length === 0) &&
-                session.status === "completed" && (
+                  {/* Audio Player - Right side, compact */}
+                  <div className="space-y-6">
+                    {audioUrl ? (
+                      <AudioPlayer
+                        fileUrl={audioUrl}
+                        fileName={session.recordings[0].file_path}
+                      />
+                    ) : (
+                      <Card
+                        className="rounded-3xl border shadow-sm"
+                        style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
+                      >
+                        <CardContent className="p-12 text-center">
+                          <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4" />
+                          <p className="text-sm text-slate-600">
+                            Loading audio...
+                          </p>
+                        </CardContent>
+                      </Card>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="max-w-2xl">
                   <Card
                     className="rounded-3xl border shadow-sm"
                     style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
@@ -453,77 +563,10 @@ export default function SessionDetailPage({
                       </div>
                     </CardContent>
                   </Card>
-                )}
-            </div>
-
-            {/* Quick Actions Sidebar */}
-            <Card
-              className="rounded-3xl border shadow-sm"
-              style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
-            >
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-slate-900">
-                  Quick Actions
-                </CardTitle>
-                <p className="text-sm text-slate-500">
-                  Stay responsive to session status changes.
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {session.status === "scheduled" && (
-                  <Button
-                    className="w-full rounded-xl text-sm font-semibold text-white shadow-lg transition"
-                    style={{
-                      backgroundColor: themeConfig.colors.primary,
-                      boxShadow: themeConfig.colors.shadowPrimary,
-                    }}
-                    onClick={handleStartVideoCall}
-                    disabled={updateStatus.isPending}
-                  >
-                    <Video className="mr-2 h-4 w-4" />
-                    Start Video Call
-                  </Button>
-                )}
-                {session.status === "in_progress" && (
-                  <Button
-                    className="w-full rounded-xl bg-emerald-500 text-sm font-semibold text-white shadow-lg transition hover:bg-emerald-400"
-                    onClick={() => handleStatusChange("completed")}
-                    disabled={updateStatus.isPending}
-                  >
-                    <CheckCircle className="mr-2 h-4 w-4" />
-                    Complete Session
-                  </Button>
-                )}
-                {(session.status === "scheduled" ||
-                  session.status === "in_progress") && (
-                  <Button
-                    className="w-full rounded-xl border text-sm font-semibold text-rose-500 hover:bg-rose-50"
-                    variant="outline"
-                    style={{ borderColor: "rgba(244, 63, 94, 0.38)" }}
-                    onClick={() => handleStatusChange("cancelled")}
-                    disabled={updateStatus.isPending}
-                  >
-                    <XCircle className="mr-2 h-4 w-4" />
-                    Cancel Session
-                  </Button>
-                )}
-                <Button
-                  className="w-full rounded-xl border text-sm font-semibold text-[var(--theme-primary-hex)] hover:bg-[var(--theme-highlight)]"
-                  variant="outline"
-                  style={{ borderColor: "rgba(120, 57, 238, 0.24)" }}
-                  onClick={() =>
-                    router.push(`/dashboard/clients/${session.client.id}`)
-                  }
-                >
-                  <User className="mr-2 h-4 w-4" />
-                  View Client Profile
-                </Button>
-                <div className="rounded-xl border border-[rgba(120,57,238,0.32)] bg-[var(--theme-highlight)] p-4 text-xs font-medium text-[var(--theme-primary-hex)]">
-                  Every update keeps your client journey aligned.
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              )}
+            </>
+          )}
         </TabsContent>
 
         {/* AI Summary Tab */}
@@ -577,7 +620,7 @@ export default function SessionDetailPage({
         {/* Session Information Tab */}
         <TabsContent value="info" className="space-y-6">
           <Card
-            className="rounded-3xl border shadow-sm"
+            className="rounded-3xl border shadow-sm max-w-3xl"
             style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
           >
             <CardHeader className="flex flex-row items-center justify-between">
@@ -593,7 +636,7 @@ export default function SessionDetailPage({
             </CardHeader>
             <CardContent className="space-y-4">
               <div
-                className="flex items-center gap-3 rounded-2xl border bg-white/70 p-4"
+                className="flex items-center gap-3 rounded-2xl border bg-white/70 p-4 max-w-md"
                 style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
               >
                 <User className="h-5 w-5 text-[var(--theme-primary-hex)]" />
@@ -609,7 +652,7 @@ export default function SessionDetailPage({
 
               <div className="flex flex-wrap gap-4">
                 <div
-                  className="flex flex-1 min-w-[220px] items-center gap-3 rounded-2xl border bg-white/70 p-4"
+                  className="flex items-center gap-3 rounded-2xl border bg-white/70 p-4 w-full sm:w-auto sm:min-w-[260px] sm:max-w-[320px]"
                   style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
                 >
                   <Calendar className="h-5 w-5 text-[var(--theme-primary-hex)]" />
@@ -623,7 +666,7 @@ export default function SessionDetailPage({
                   </div>
                 </div>
                 <div
-                  className="flex flex-1 min-w-[220px] items-center gap-3 rounded-2xl border bg-white/70 p-4"
+                  className="flex items-center gap-3 rounded-2xl border bg-white/70 p-4 w-full sm:w-auto sm:min-w-[200px] sm:max-w-[260px]"
                   style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
                 >
                   <Clock className="h-5 w-5 text-[var(--theme-primary-hex)]" />
@@ -640,7 +683,7 @@ export default function SessionDetailPage({
 
               {session.duration_minutes && (
                 <div
-                  className="flex items-center gap-3 rounded-2xl border bg-white/70 p-4"
+                  className="flex items-center gap-3 rounded-2xl border bg-white/70 p-4 max-w-xs"
                   style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
                 >
                   <Clock className="h-5 w-5 text-[var(--theme-primary-hex)]" />
@@ -657,7 +700,7 @@ export default function SessionDetailPage({
 
               {session.call_type && (
                 <div
-                  className="flex items-center gap-3 rounded-2xl border bg-white/70 p-4"
+                  className="flex items-center gap-3 rounded-2xl border bg-white/70 p-4 max-w-xs"
                   style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
                 >
                   <Video className="h-5 w-5 text-[var(--theme-primary-hex)]" />
@@ -674,7 +717,7 @@ export default function SessionDetailPage({
 
               {session.meeting_url && (
                 <div
-                  className="rounded-2xl border bg-white/70 p-4"
+                  className="rounded-2xl border bg-white/70 p-4 max-w-2xl"
                   style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
                 >
                   <p className="text-xs font-medium uppercase tracking-[0.25em] text-slate-400">
@@ -684,7 +727,7 @@ export default function SessionDetailPage({
                     href={session.meeting_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-[var(--theme-primary-hex)] hover:underline"
+                    className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-[var(--theme-primary-hex)] hover:underline break-all"
                   >
                     {session.meeting_url}
                   </a>
@@ -693,7 +736,7 @@ export default function SessionDetailPage({
 
               {session.notes && (
                 <div
-                  className="rounded-2xl border bg-white/70 p-4"
+                  className="rounded-2xl border bg-white/70 p-4 max-w-2xl"
                   style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
                 >
                   <p className="text-xs font-medium uppercase tracking-[0.25em] text-slate-400">
