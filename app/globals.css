@@ -127,40 +127,40 @@
   font-family: inherit;
 }
 
- .empath-calendar .rbc-header {
+.empath-calendar .rbc-header {
   padding: 12px 4px;
   font-weight: 600;
   font-size: 0.875rem;
   color: rgb(71 85 105);
   border-bottom: 1px solid rgba(120, 57, 238, 0.14);
- }
+}
 
- .empath-calendar .rbc-today {
+.empath-calendar .rbc-today {
   background-color: var(--theme-highlight);
- }
+}
 
- .empath-calendar .rbc-off-range-bg {
+.empath-calendar .rbc-off-range-bg {
   background-color: rgb(248 250 252);
- }
+}
 
- .empath-calendar .rbc-event {
+.empath-calendar .rbc-event {
   padding: 2px 4px;
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
   transition: opacity 0.2s;
- }
+}
 
- .empath-calendar .rbc-event:hover {
+.empath-calendar .rbc-event:hover {
   opacity: 0.85;
- }
+}
 
- .empath-calendar .rbc-event.rbc-selected {
+.empath-calendar .rbc-event.rbc-selected {
   opacity: 0.95;
- }
+}
 
- .empath-calendar .rbc-toolbar {
+.empath-calendar .rbc-toolbar {
   padding: 16px 0px 16px 0px;
   margin-bottom: 16px;
   display: flex;
@@ -168,9 +168,9 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
- }
+}
 
- .empath-calendar .rbc-toolbar button {
+.empath-calendar .rbc-toolbar button {
   padding: 8px 16px;
   border: 1px solid rgba(120, 57, 238, 0.18);
   background-color: white;
@@ -179,79 +179,112 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
- }
+}
 
- .empath-calendar .rbc-toolbar button:hover {
+.empath-calendar .rbc-toolbar button:hover {
   background-color: var(--theme-highlight);
   border-color: var(--theme-ghost-border);
- }
+}
 
- .empath-calendar .rbc-toolbar button.rbc-active {
+.empath-calendar .rbc-toolbar button.rbc-active {
   background-color: var(--theme-primary-hex);
   color: white;
   border-color: var(--theme-primary-hex);
- }
+}
 
- .empath-calendar .rbc-toolbar button:focus {
+.empath-calendar .rbc-toolbar button:focus {
   outline: 2px solid var(--theme-focus-border);
   outline-offset: 2px;
- }
+}
 
- .empath-calendar .rbc-month-view,
- .empath-calendar .rbc-time-view,
- .empath-calendar .rbc-agenda-view {
+.empath-calendar .rbc-month-view,
+.empath-calendar .rbc-time-view,
+.empath-calendar .rbc-agenda-view {
   border: 1px solid rgba(120, 57, 238, 0.14);
   border-radius: 16px;
   overflow: hidden;
- }
+}
 
- .empath-calendar .rbc-time-slot {
+.empath-calendar .rbc-time-slot {
   border-top: 1px solid rgba(120, 57, 238, 0.08);
- }
+}
 
- .empath-calendar .rbc-day-slot .rbc-time-slot {
+.empath-calendar .rbc-day-slot .rbc-time-slot {
   border-top: 1px solid rgba(120, 57, 238, 0.08);
- }
+}
 
- .empath-calendar .rbc-current-time-indicator {
+.empath-calendar .rbc-current-time-indicator {
   background-color: var(--theme-primary-hex);
   height: 2px;
- }
+}
 
- .empath-calendar .rbc-show-more {
+.empath-calendar .rbc-show-more {
   color: var(--theme-primary-hex);
   font-weight: 600;
   font-size: 0.75rem;
   padding: 4px;
   cursor: pointer;
- }
+}
 
- .empath-calendar .rbc-show-more:hover {
+.empath-calendar .rbc-show-more:hover {
   text-decoration: underline;
- }
+}
 
- .empath-calendar .rbc-agenda-view table {
+.empath-calendar .rbc-agenda-view table {
   border-spacing: 0;
- }
+}
 
- .empath-calendar .rbc-agenda-view .rbc-agenda-date-cell,
- .empath-calendar .rbc-agenda-view .rbc-agenda-time-cell {
+.empath-calendar .rbc-agenda-view .rbc-agenda-date-cell,
+.empath-calendar .rbc-agenda-view .rbc-agenda-time-cell {
   padding: 12px 16px;
   vertical-align: top;
- }
+}
 
- .empath-calendar .rbc-agenda-view .rbc-agenda-event-cell {
+.empath-calendar .rbc-agenda-view .rbc-agenda-event-cell {
   padding: 12px 16px;
- }
+}
 
 @media (max-width: 768px) {
   .empath-calendar .rbc-toolbar {
     flex-direction: column;
   }
-  
+
   .empath-calendar .rbc-toolbar-label {
     width: 100%;
     text-align: center;
     margin: 8px 0;
+  }
+}
+
+/* Mobile optimizations for video call */
+@layer base {
+  /* Prevent pull-to-refresh on mobile during video calls */
+  body {
+    overscroll-behavior-y: contain;
+  }
+
+  /* Improve touch targets for mobile */
+  @media (max-width: 640px) {
+    button,
+    a,
+    input,
+    select,
+    textarea {
+      min-height: 44px;
+    }
+  }
+
+  /* Prevent accidental zoom on inputs */
+  @media (max-width: 640px) {
+    input,
+    select,
+    textarea {
+      font-size: max(16px, 1em);
+    }
+  }
+
+  /* Smooth scrolling for mobile */
+  * {
+    -webkit-overflow-scrolling: touch;
   }
 }

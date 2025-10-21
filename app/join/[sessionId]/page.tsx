@@ -46,8 +46,8 @@ export default function JoinSessionPage({
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center p-4">
-        <Card className="max-w-md w-full rounded-3xl border shadow-lg">
-          <CardContent className="p-12 text-center">
+        <Card className="max-w-md w-full rounded-2xl sm:rounded-3xl border shadow-lg">
+          <CardContent className="p-6 sm:p-12 text-center">
             <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-purple-500" />
             <p className="text-sm text-slate-600">Loading session...</p>
           </CardContent>
@@ -59,13 +59,15 @@ export default function JoinSessionPage({
   if (error || !roomUrl) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center p-4">
-        <Card className="max-w-md w-full rounded-3xl border-rose-200 border shadow-lg">
-          <CardContent className="p-12 text-center">
+        <Card className="max-w-md w-full rounded-2xl sm:rounded-3xl border-rose-200 border shadow-lg">
+          <CardContent className="p-6 sm:p-12 text-center">
             <div className="text-rose-500 mb-4">
-              <Video className="h-12 w-12 mx-auto mb-2" />
-              <p className="font-semibold">Session Not Available</p>
+              <Video className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-2" />
+              <p className="font-semibold text-sm sm:text-base">
+                Session Not Available
+              </p>
             </div>
-            <p className="text-sm text-slate-600">{error}</p>
+            <p className="text-xs sm:text-sm text-slate-600">{error}</p>
           </CardContent>
         </Card>
       </div>
@@ -76,23 +78,23 @@ export default function JoinSessionPage({
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center p-4">
         <Card
-          className="max-w-md w-full rounded-3xl border shadow-lg"
+          className="max-w-md w-full rounded-2xl sm:rounded-3xl border shadow-lg"
           style={{ borderColor: "rgba(120, 57, 238, 0.18)" }}
         >
-          <CardHeader className="text-center pb-4">
-            <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-4">
-              <Video className="h-8 w-8 text-purple-600" />
+          <CardHeader className="text-center pb-3 sm:pb-4 px-4 sm:px-6">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <Video className="h-7 w-7 sm:h-8 sm:w-8 text-purple-600" />
             </div>
-            <CardTitle className="text-2xl font-bold text-slate-900">
+            <CardTitle className="text-xl sm:text-2xl font-bold text-slate-900">
               Join Therapy Session
             </CardTitle>
-            <p className="text-sm text-slate-500 mt-2">
+            <p className="text-xs sm:text-sm text-slate-500 mt-2">
               Your therapist is waiting for you
             </p>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 px-4 sm:px-6 pb-4 sm:pb-6">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-2">
                 Your Name
               </label>
               <input
@@ -100,19 +102,19 @@ export default function JoinSessionPage({
                 value={clientName}
                 onChange={(e) => setClientName(e.target.value)}
                 placeholder="Enter your name"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition"
+                className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border border-slate-200 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none transition text-sm sm:text-base"
                 onKeyDown={(e) => e.key === "Enter" && handleJoin()}
               />
             </div>
             <Button
               onClick={handleJoin}
               disabled={!clientName.trim()}
-              className="w-full rounded-xl py-6 text-base font-semibold"
+              className="w-full rounded-xl py-5 sm:py-6 text-sm sm:text-base font-semibold"
               size="lg"
             >
               Join Session
             </Button>
-            <p className="text-xs text-slate-400 text-center">
+            <p className="text-[10px] sm:text-xs text-slate-400 text-center px-2">
               By joining, you allow camera and microphone access
             </p>
           </CardContent>

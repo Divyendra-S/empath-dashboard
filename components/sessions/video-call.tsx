@@ -32,7 +32,7 @@ function VideoTile({ sessionId }: { sessionId: string }) {
   const videoState = useVideoTrack(sessionId);
 
   return (
-    <div className="relative w-full h-full bg-slate-900 rounded-xl overflow-hidden">
+    <div className="relative w-full h-full bg-slate-900 rounded-lg sm:rounded-xl overflow-hidden">
       <video
         autoPlay
         muted={sessionId === "local"}
@@ -47,12 +47,12 @@ function VideoTile({ sessionId }: { sessionId: string }) {
       {!videoState.persistentTrack && (
         <div className="absolute inset-0 flex items-center justify-center bg-slate-800">
           <div className="text-center">
-            <div className="w-16 h-16 rounded-full bg-purple-500 flex items-center justify-center mx-auto mb-2">
-              <span className="text-2xl font-bold text-white">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-purple-500 flex items-center justify-center mx-auto mb-2">
+              <span className="text-lg sm:text-2xl font-bold text-white">
                 {sessionId === "local" ? "You" : "Guest"}
               </span>
             </div>
-            <p className="text-sm text-slate-400">Camera off</p>
+            <p className="text-xs sm:text-sm text-slate-400">Camera off</p>
           </div>
         </div>
       )}
@@ -227,14 +227,21 @@ function VideoCallContent({
 
   if (error) {
     return (
-      <div className="flex items-center justify-center p-12">
+      <div className="flex items-center justify-center p-6 sm:p-12">
         <div className="text-center">
           <div className="text-red-500 mb-4">
-            <XCircle className="h-12 w-12 mx-auto mb-2" />
-            <p className="font-semibold">Failed to join call</p>
+            <XCircle className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-2" />
+            <p className="font-semibold text-sm sm:text-base">
+              Failed to join call
+            </p>
           </div>
-          <p className="text-sm text-slate-600 mb-4">{error}</p>
-          <Button onClick={() => window.location.reload()}>Try Again</Button>
+          <p className="text-xs sm:text-sm text-slate-600 mb-4">{error}</p>
+          <Button
+            onClick={() => window.location.reload()}
+            className="text-sm sm:text-base"
+          >
+            Try Again
+          </Button>
         </div>
       </div>
     );
@@ -242,11 +249,11 @@ function VideoCallContent({
 
   if (!joined) {
     return (
-      <div className="flex items-center justify-center p-12">
+      <div className="flex items-center justify-center p-6 sm:p-12">
         <div className="text-center">
           <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4" />
-          <p className="text-sm text-slate-600">Joining call...</p>
-          <p className="text-xs text-slate-400 mt-2">
+          <p className="text-sm sm:text-base text-slate-600">Joining call...</p>
+          <p className="text-xs sm:text-sm text-slate-400 mt-2 px-4">
             Please allow camera and microphone access
           </p>
         </div>
@@ -260,21 +267,23 @@ function VideoCallContent({
   return (
     <div
       className={
-        fullScreen ? "fixed inset-0 z-50 bg-slate-950 p-6" : "space-y-4"
+        fullScreen ? "fixed inset-0 z-50 bg-slate-950 p-2 sm:p-6" : "space-y-4"
       }
     >
       {/* Video Grid */}
       <div
         className={`relative ${
-          fullScreen ? "h-[calc(100vh-120px)]" : "aspect-video"
-        } bg-slate-900 rounded-2xl overflow-hidden`}
+          fullScreen
+            ? "h-[calc(100vh-100px)] sm:h-[calc(100vh-120px)]"
+            : "aspect-video"
+        } bg-slate-900 rounded-xl sm:rounded-2xl overflow-hidden`}
       >
         <div
-          className="grid h-full"
+          className="grid h-full gap-1 sm:gap-2"
           style={{
             gridTemplateColumns:
               remoteParticipants.length > 0
-                ? "repeat(auto-fit, minmax(300px, 1fr))"
+                ? "repeat(auto-fit, minmax(min(100%, 300px), 1fr))"
                 : "1fr",
           }}
         >
@@ -289,9 +298,10 @@ function VideoCallContent({
 
         {/* Recording Indicator */}
         {(isRecording || isLocalRecording) && (
-          <div className="absolute top-4 right-4 flex items-center gap-2 bg-red-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold z-10">
-            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-            Recording
+          <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex items-center gap-1.5 sm:gap-2 bg-red-500 text-white px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-semibold z-10">
+            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full animate-pulse" />
+            <span className="hidden xs:inline">Recording</span>
+            <span className="xs:hidden">REC</span>
           </div>
         )}
 
@@ -299,10 +309,10 @@ function VideoCallContent({
         <Button
           variant="secondary"
           size="icon"
-          className="absolute top-4 left-4 rounded-full z-10"
+          className="absolute top-2 left-2 sm:top-4 sm:left-4 rounded-full z-10 h-8 w-8 sm:h-10 sm:w-10"
           onClick={toggleFullScreen}
         >
-          <Maximize className="h-4 w-4" />
+          <Maximize className="h-3 w-3 sm:h-4 sm:w-4" />
         </Button>
       </div>
 
@@ -310,38 +320,39 @@ function VideoCallContent({
       <div
         className={
           fullScreen
-            ? "fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-700 p-6 z-50"
-            : "bg-slate-900/50 backdrop-blur-sm rounded-2xl p-4"
+            ? "fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-700 p-3 sm:p-6 z-50"
+            : "bg-slate-900/50 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4"
         }
       >
         {/* Recording Status */}
         {isLocalRecording && (
-          <div className="text-center mb-4">
-            <div className="inline-flex items-center gap-2 bg-red-500/20 border border-red-500/50 text-red-300 px-4 py-2 rounded-full text-sm font-medium">
-              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-              Recording: {Math.floor(recordingDuration / 60)}:
+          <div className="text-center mb-2 sm:mb-4">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-red-500/20 border border-red-500/50 text-red-300 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium">
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full animate-pulse" />
+              <span className="hidden xs:inline">Recording: </span>
+              {Math.floor(recordingDuration / 60)}:
               {(recordingDuration % 60).toString().padStart(2, "0")}
             </div>
           </div>
         )}
 
         {/* Control Buttons */}
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex items-center justify-center gap-2 sm:gap-4">
           <Button
             variant={videoEnabled ? "secondary" : "destructive"}
             size="lg"
-            className="rounded-xl min-w-[120px] bg-white/10 hover:bg-white/20 text-white border-white/20"
+            className="rounded-xl sm:min-w-[120px] bg-white/10 hover:bg-white/20 text-white border-white/20 px-3 sm:px-4"
             onClick={toggleVideo}
           >
             {videoEnabled ? (
               <>
-                <Video className="h-5 w-5 mr-2" />
-                Video
+                <Video className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-2" />
+                <span className="hidden sm:inline">Video</span>
               </>
             ) : (
               <>
-                <VideoOff className="h-5 w-5 mr-2" />
-                Video Off
+                <VideoOff className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-2" />
+                <span className="hidden sm:inline">Video Off</span>
               </>
             )}
           </Button>
@@ -349,29 +360,30 @@ function VideoCallContent({
           <Button
             variant={audioEnabled ? "secondary" : "destructive"}
             size="lg"
-            className="rounded-xl min-w-[120px] bg-white/10 hover:bg-white/20 text-white border-white/20"
+            className="rounded-xl sm:min-w-[120px] bg-white/10 hover:bg-white/20 text-white border-white/20 px-3 sm:px-4"
             onClick={toggleAudio}
           >
             {audioEnabled ? (
               <>
-                <Mic className="h-5 w-5 mr-2" />
-                Audio
+                <Mic className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-2" />
+                <span className="hidden sm:inline">Audio</span>
               </>
             ) : (
               <>
-                <MicOff className="h-5 w-5 mr-2" />
-                Muted
+                <MicOff className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-2" />
+                <span className="hidden sm:inline">Muted</span>
               </>
             )}
           </Button>
 
           <Button
             size="lg"
-            className="rounded-xl min-w-[140px] bg-red-500 hover:bg-red-600 text-white"
+            className="rounded-xl sm:min-w-[140px] bg-red-500 hover:bg-red-600 text-white px-3 sm:px-4"
             onClick={endCall}
           >
-            <PhoneOff className="h-5 w-5 mr-2" />
-            End Call
+            <PhoneOff className="h-4 w-4 sm:h-5 sm:w-5 sm:mr-2" />
+            <span className="hidden xs:inline">End Call</span>
+            <span className="xs:hidden">End</span>
           </Button>
         </div>
       </div>
