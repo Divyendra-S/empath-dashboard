@@ -22,7 +22,6 @@ export default function ClientsPage() {
           background: themeConfig.gradients.panel, 
         }}
       >
-        
         <div
           className="absolute -top-20 right-0 h-40 w-40 rounded-full blur-3xl"
           style={{ background: themeConfig.colors.highlightStrong }}
