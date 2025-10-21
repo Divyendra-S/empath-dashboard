@@ -33,7 +33,7 @@ import {
   useUpdateSessionStatus,
   useDeleteSession,
 } from "@/lib/hooks/use-sessions";
-import type { SessionStatus } from "@/lib/types";
+import type { SessionStatus, Recording } from "@/lib/types";
 import { themeConfig } from "@/lib/theme";
 import { VideoCall } from "@/components/sessions/video-call";
 import { AudioPlayer } from "@/components/sessions/audio-player";
@@ -92,10 +92,10 @@ export default function SessionDetailPage({
   // Auto-refresh when transcript or summary is processing
   useEffect(() => {
     const hasProcessingTranscript = session?.recordings?.some(
-      (r) => r.transcript_status === "processing"
+      (r: Recording) => r.transcript_status === "processing"
     );
     const hasProcessingSummary = session?.recordings?.some(
-      (r) => r.summary_status === "processing"
+      (r: Recording) => r.summary_status === "processing"
     );
     const isCompletedWithoutRecording =
       (session?.status === "completed" || session?.status === "cancelled") &&
