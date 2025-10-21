@@ -53,6 +53,7 @@ export const config = {
     "/dashboard/:path*",
     "/login",
     "/signup",
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    // Exclude /join routes to allow public access for clients
+    "/((?!_next/static|_next/image|favicon.ico|join|api/sessions/.*/room-url|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
