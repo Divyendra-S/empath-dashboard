@@ -21,9 +21,11 @@ export async function GET(
 
     console.log(`[Room URL] Fetching room URL for session: ${sessionId}`);
 
+    // Use server client with anon key (works without authentication)
     const supabase = await createClient();
 
     // Fetch session (no auth required for public join)
+    // This uses the anon key which has read access to sessions table
     const { data: session, error } = await supabase
       .from("sessions")
       .select("daily_room_url, status")
