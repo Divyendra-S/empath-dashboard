@@ -20,6 +20,7 @@ interface ClientCardProps {
     email: string;
     phone?: string;
     created_at: string;
+    source?: "project_a" | "project_b";
   };
 }
 
@@ -45,6 +46,11 @@ export function ClientCard({ client }: ClientCardProps) {
                 {client.full_name}
               </h3>
             </Link>
+            {client.source === "project_b" && (
+              <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-700">
+                Project B
+              </span>
+            )}
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -59,13 +65,15 @@ export function ClientCard({ client }: ClientCardProps) {
               <DropdownMenuItem asChild>
                 <Link href={`/dashboard/clients/${client.id}/edit`}>Edit</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={handleArchive}
-                disabled={isPending}
-                className="text-red-600"
-              >
-                Archive
-              </DropdownMenuItem>
+              {client.source !== "project_b" && (
+                <DropdownMenuItem
+                  onClick={handleArchive}
+                  disabled={isPending}
+                  className="text-red-600"
+                >
+                  Archive
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

@@ -1,7 +1,7 @@
 "use server";
 
 import Groq from "groq-sdk";
-import { createClient } from "@/lib/supabase/server";
+import { createServerClientA as createClient } from "@/lib/supabase/server-a";
 import fs from "fs/promises";
 import fsSync from "fs";
 import path from "path";

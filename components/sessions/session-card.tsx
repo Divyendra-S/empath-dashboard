@@ -40,7 +40,7 @@ export function SessionCard({ session }: SessionCardProps) {
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-base font-semibold text-gray-900 truncate">
-                {session.client.full_name}
+                {session.client?.full_name || "Unknown Client"}
               </h3>
               <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
                 <Calendar className="h-3 w-3 flex-shrink-0" />

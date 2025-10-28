@@ -13,6 +13,7 @@ export async function middleware(request: NextRequest) {
     },
   });
 
+  // Project A: primary auth
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
