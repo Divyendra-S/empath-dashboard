@@ -1,7 +1,8 @@
 "use server";
 
-import { createClient as createSupabaseClient } from "@/lib/supabase/server";
+import { createServerClientA as createSupabaseClient } from "@/lib/supabase/server-a";
 import { revalidatePath } from "next/cache";
+import { getProjectBClients, getProjectBClient, getProjectBClientStats } from "./project-b";
 
 export interface ClientInsert {
   full_name: string;
@@ -19,6 +20,7 @@ export async function getClients(search?: string) {
 
   if (!user) throw new Error("Unauthorized");
 
+  // Fetch from Project A
   let query = supabase
     .from("clients")
     .select("*")
@@ -30,10 +32,40 @@ export async function getClients(search?: string) {
     query = query.or(`full_name.ilike.%${search}%,email.ilike.%${search}%`);
   }
 
-  const { data, error } = await query;
+  const { data: projectAClients, error } = await query;
 
   if (error) throw error;
-  return data;
+
+  // Add source marker to Project A clients
+  const projectAWithSource = (projectAClients || []).map(client => ({
+    ...client,
+    source: "project_a" as const,
+  }));
+
+  // Fetch from Project B
+  const projectBClients = await getProjectBClients();
+
+  // Filter Project B clients by search if needed
+  let filteredProjectB = projectBClients;
+  if (search) {
+    const searchLower = search.toLowerCase();
+    filteredProjectB = projectBClients.filter(
+      (client) =>
+        client.full_name?.toLowerCase().includes(searchLower) ||
+        client.email?.toLowerCase().includes(searchLower)
+    );
+  }
+
+  // Create a Set of Project A client IDs for deduplication
+  const projectAIds = new Set(projectAWithSource.map(c => c.id));
+
+  // Filter out Project B clients that already exist in Project A (synced clients)
+  const uniqueProjectB = filteredProjectB.filter(
+    client => !projectAIds.has(client.id)
+  );
+
+  // Merge both lists (Project A first, then unique Project B clients)
+  return [...projectAWithSource, ...uniqueProjectB];
 }
 
 export async function getClient(id: string) {
@@ -44,6 +76,7 @@ export async function getClient(id: string) {
 
   if (!user) throw new Error("Unauthorized");
 
+  // Try Project A first
   const { data, error } = await supabase
     .from("clients")
     .select("*")
@@ -51,8 +84,18 @@ export async function getClient(id: string) {
     .eq("therapist_id", user.id)
     .single();
 
-  if (error) throw error;
-  return data;
+  if (!error && data) {
+    return { ...data, source: "project_a" as const };
+  }
+
+  // If not found in Project A, try Project B
+  const projectBClient = await getProjectBClient(id);
+  if (projectBClient) {
+    return projectBClient;
+  }
+
+  // If still not found, throw the original error
+  throw error || new Error("Client not found");
 }
 
 export async function createClient(data: ClientInsert) {
@@ -149,25 +192,30 @@ export async function getClientStats(id: string) {
 
   if (!user) throw new Error("Unauthorized");
 
-  // Get session counts
+  // Get session counts from Project A
   const { data: sessions, error } = await supabase
     .from("sessions")
     .select("status")
     .eq("client_id", id);
 
-  if (error) throw error;
+  // Get session counts from Project B
+  const projectBStats = await getProjectBClientStats(id);
 
-  const total = sessions?.length || 0;
-  const upcoming =
-    sessions?.filter((s) => s.status === "scheduled").length || 0;
-  const completed =
-    sessions?.filter((s) => s.status === "completed").length || 0;
+  // If Project A has data, use it; otherwise use Project B
+  if (!error && sessions && sessions.length > 0) {
+    const total = sessions.length;
+    const upcoming = sessions.filter((s) => s.status === "scheduled").length;
+    const completed = sessions.filter((s) => s.status === "completed").length;
 
-  return {
-    total,
-    upcoming,
-    completed,
-  };
+    return {
+      total,
+      upcoming,
+      completed,
+    };
+  }
+
+  // Return Project B stats
+  return projectBStats;
 }
 
 export async function checkEmailUniqueness(email: string, excludeId?: string) {

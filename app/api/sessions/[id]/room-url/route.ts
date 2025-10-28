@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createServerClientA as createClient } from "@/lib/supabase/server-a";
 
 // Add CORS headers for mobile browser compatibility
 const corsHeaders = {

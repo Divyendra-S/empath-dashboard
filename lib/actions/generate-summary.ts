@@ -1,7 +1,7 @@
 "use server";
 
 import Groq from "groq-sdk";
-import { createClient } from "@/lib/supabase/server";
+import { createServerClientA as createClient } from "@/lib/supabase/server-a";
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY!,

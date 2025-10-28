@@ -69,21 +69,23 @@ export function SessionCalendar({
   // Convert sessions to calendar events
   const events: CalendarEvent[] = useMemo(
     () =>
-      sessions.map((session) => {
-        const start = new Date(session.scheduled_at);
-        const end = addMinutes(start, session.duration_minutes || 60);
+      sessions
+        .filter((session) => session.client) // Filter out sessions without client data
+        .map((session) => {
+          const start = new Date(session.scheduled_at);
+          const end = addMinutes(start, session.duration_minutes || 60);
 
-        return {
-          id: session.id,
-          title: session.client.full_name,
-          start,
-          end,
-          resource: {
-            session,
-            status: session.status,
-          },
-        };
-      }),
+          return {
+            id: session.id,
+            title: session.client?.full_name || "Unknown Client",
+            start,
+            end,
+            resource: {
+              session,
+              status: session.status,
+            },
+          };
+        }),
     [sessions]
   );
 
@@ -105,7 +107,7 @@ export function SessionCalendar({
         sessionId: session.id,
         oldDate: new Date(session.scheduled_at),
         newDate,
-        clientName: session.client.full_name,
+        clientName: session.client?.full_name || "Unknown Client",
       });
     },
     []
