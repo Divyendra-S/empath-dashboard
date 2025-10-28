@@ -2,10 +2,7 @@
   "mcpServers": {
     "supabase": {
       "type": "http",
-      "url": "https://mcp.supabase.com/mcp?project_ref=lofuvsrrwmcvccmgbruy",
-      "headers": {
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvZnV2c3Jyd21jdmNjbWdicnV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDczODgzODgsImV4cCI6MjA2Mjk2NDM4OH0.1K84b89JFpw5t08uLJQw0_RKc5TY8bG9ZlSfmPc9r04"
-      }
+      "url": "https://mcp.supabase.com/mcp?project_ref=lofuvsrrwmcvccmgbruy"
     }
   }
 }
