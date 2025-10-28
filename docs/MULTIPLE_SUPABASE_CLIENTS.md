@@ -285,6 +285,7 @@ Note
 - In the connected project, clients are your users. Use `public.profiles` (preferred) joined to `auth.users` when needed. The `profiles.id` references `auth.users.id`.
 
 Profiles (public.profiles)
+
 - id: uuid (pk, references `auth.users.id`)
 - name: text nullable
 - avatar: text nullable (URL)
